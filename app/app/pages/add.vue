@@ -114,7 +114,7 @@
           type="text" 
           required
           placeholder="E.G. OUD IMPERIAL"
-          class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+          class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
             : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
@@ -132,7 +132,7 @@
           type="text" 
           required
           placeholder="E.G. SABALI"
-          class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+          class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
             : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
@@ -153,7 +153,7 @@
             min="1"
             required
             placeholder="140"
-            class="w-full border px-4 py-3 text-xs tracking-wider focus:outline-none transition-all duration-500 rounded-none"
+            class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
               : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
@@ -172,7 +172,7 @@
             min="0"
             required
             placeholder="25"
-            class="w-full border px-4 py-3 text-xs tracking-wider focus:outline-none transition-all duration-500 rounded-none"
+            class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
               : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
@@ -190,7 +190,7 @@
           >CATEGORY</label>
           <select 
             v-model="form.category"
-            class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+            class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
               : 'bg-white border-black/10 focus:border-black text-black'"
@@ -209,7 +209,7 @@
           >VOLUME</label>
           <select 
             v-model="form.volume"
-            class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+            class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
               : 'bg-white border-black/10 focus:border-black text-black'"
@@ -232,7 +232,7 @@
           rows="4"
           required
           placeholder="DESCRIBE THE PERFUME AURA, NOTES, AND IMPRESSION..."
-          class="w-full border px-4 py-3 text-xs tracking-wide focus:outline-none transition-all duration-500 resize-none rounded-none"
+          class="w-full border px-4 py-3 text-base tracking-wide focus:outline-none transition-all duration-500 resize-none rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
             : 'bg-white border-black/10 placeholder-black/15 focus:border-black text-black'"
