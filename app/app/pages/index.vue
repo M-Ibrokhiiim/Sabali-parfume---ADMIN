@@ -1,47 +1,7 @@
 <template>
   <div class="space-y-8 animate-fade-in pb-12">
     <!-- Search & Navigation Title -->
-    <div class="space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 
-          class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
-          :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
-        >
-          Inventory
-        </h2>
-        <span 
-          class="text-xs uppercase tracking-[0.15em] border px-3 py-1 rounded-full transition-all duration-500"
-          :class="store.isDarkMode.value 
-            ? 'text-white/50 bg-zinc-900 border-white/5' 
-            : 'text-black/50 bg-zinc-100 border-black/5'"
-        >
-          {{ filteredProducts.length }} products found
-        </span>
-      </div>
-
-      <!-- Brutalist Search Bar -->
-      <div class="relative">
-        <input 
-          v-model="searchQuery"
-          type="text" 
-          placeholder="SEARCH PRODUCTS, BRANDS..."
-          class="w-full transition-all duration-500 px-5 py-4 text-xs uppercase tracking-[0.2em] font-medium focus:outline-none rounded-none"
-          :class="store.isDarkMode.value 
-            ? 'bg-zinc-950 border border-white/10 text-white placeholder-white/20 focus:border-white' 
-            : 'bg-white border border-black/10 text-black placeholder-black/30 focus:border-black'"
-        />
-        <span class="absolute right-5 top-1/2 -translate-y-1/2 transition-colors duration-500">
-          <svg v-if="!searchQuery" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5" :class="store.isDarkMode.value ? 'text-white/30' : 'text-black/30'">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.637 10.637Z" />
-          </svg>
-          <button v-else @click="searchQuery = ''" class="focus:outline-none" :class="store.isDarkMode.value ? 'text-white/50 hover:text-white' : 'text-black/50 hover:text-black'">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </span>
-      </div>
-    </div>
+     
 
     <!-- Collection Category Selector (Brutalist slider toggle) -->
     <div class="border-b pb-4 overflow-x-auto scrollbar-none transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/10' : 'border-black/10'">
@@ -458,7 +418,6 @@ const tabs = [
   { label: 'ALL', value: 'all' },
   { label: 'MEN', value: 'Men' },
   { label: 'WOMEN', value: 'Women' },
-  { label: 'UNISEX', value: 'Unisex' }
 ]
 
 const filteredProducts = computed(() => {

@@ -24,7 +24,7 @@
             SABALI
           </h1>
           
-          <div class="flex items-center gap-4  ml-[57vw]">
+          <div class="flex items-center gap-4  ml-[55vw]">
             <!-- Brutalist Theme Toggle Button -->
             <button 
               @click="store.toggleTheme" 
