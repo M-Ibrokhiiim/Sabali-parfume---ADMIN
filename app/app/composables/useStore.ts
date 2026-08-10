@@ -6,7 +6,7 @@ export interface Product {
   brand: string
   price: number
   volume: string
-  category: 'Men' | 'Women' | 'Unisex'
+  category: 'Men' | 'Women' 
   stock: number
   description: string
   images: string[]
