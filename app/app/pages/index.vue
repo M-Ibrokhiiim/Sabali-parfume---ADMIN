@@ -76,7 +76,7 @@
 
         <!-- Product Image (High fashion design aspect ratio with CSS Carousel) -->
         <div 
-          class="w-24 h-28 md:w-32 md:h-36 flex-shrink-0 relative transition-all duration-500 border group"
+          class="w-24 h-36 md:w-32 md:h-36 flex-shrink-0 relative transition-all duration-500 border group"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-900 border-white/5 hover:border-white/20' 
             : 'bg-zinc-100 border-black/5 hover:border-black/20'"
