@@ -271,7 +271,6 @@ const tabs = [
   { label: 'ALL', value: 'all' },
   { label: 'MEN', value: 'Men' },
   { label: 'WOMEN', value: 'Women' },
-  { label: 'UNISEX', value: 'Unisex' }
 ]
 
 const filteredProducts = computed(() => {
