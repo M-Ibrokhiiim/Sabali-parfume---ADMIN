@@ -58,8 +58,8 @@
         class="absolute bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl py-3 px-6 transition-all duration-500 w-full"
         :class="store.isDarkMode.value ? 'bg-black/90 border-white/10' : 'bg-white/90 border-black/10'"
       >
-        <div class="w-full mx-auto flex items-center justify-around relative">
-          
+      
+      <div class="w-full  mx-auto gap-16 flex relative">
           <!-- Products Tab -->
           <NuxtLink 
             to="/" 
@@ -89,7 +89,7 @@
             class="flex flex-col items-center justify-center text-center mt-2 flex-1 transition-all duration-300 relative"
           >
             <div 
-              class="flex items-center justify-center w-14 h-14 rounded-full border-2 transition-all duration-300 -translate-y-4 shadow-2xl"
+              class="flex items-center justify-center w-16 h-16 rounded-full border-2 transition-all duration-300 -translate-y-4 shadow-2xl"
               :class="[
                 route.path === '/add'
                   ? (store.isDarkMode.value ? 'border-white bg-white text-black scale-110' : 'border-black bg-black text-white scale-110')
@@ -134,12 +134,11 @@
             ></div>
           </NuxtLink>
 
-        </div>
+      </div>
       </nav>
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { useRoute } from 'vue-router'
