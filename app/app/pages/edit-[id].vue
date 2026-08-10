@@ -1,39 +1,35 @@
 <template>
   <div class="space-y-8 animate-fade-in pb-12">
     <!-- Header -->
-    <div class="space-y-1 border-b pb-4 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/10' : 'border-black/10'">
-      <span 
-        class="text-[9px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-        :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
-      >New Creation</span>
-      <h2 
-        class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
-        :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
-      >
-        Add Product
-      </h2>
-    </div>
-
-    <!-- Success Feedback Overlay -->
-    <div 
-      v-if="showSuccess" 
-      class="border p-6 text-center space-y-4 transition-all duration-500"
-      :class="store.isDarkMode.value ? 'border-white bg-zinc-950 text-white' : 'border-black bg-white text-black'"
-    >
-      <div 
-        class="w-10 h-10 border flex items-center justify-center mx-auto transition-all duration-500"
-        :class="store.isDarkMode.value ? 'border-white text-white' : 'border-black text-black'"
+    <div class="flex items-center justify-between border-b pb-4 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/10' : 'border-black/10'">
+      <div class="space-y-1">
+        <span 
+          class="text-[9px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
+          :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
+        >Modifying Item</span>
+        <h2 
+          class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
+          :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
+        >
+          Edit Product
+        </h2>
+      </div>
+      <!-- Back Button -->
+      <button 
+        @click="router.push('/')" 
+        class="p-2 border transition-all duration-300"
+        :class="store.isDarkMode.value 
+          ? 'border-white/10 hover:border-white text-white/50 hover:text-white' 
+          : 'border-black/10 hover:border-black text-black/50 hover:text-black'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
-      </div>
-      <div class="space-y-1">
-        <h3 class="text-sm uppercase tracking-[0.2em] font-black">CREATION SUCCESSFUL</h3>
-        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">
-          The perfume has been integrated into SABALI inventory.
-        </p>
-      </div>
+      </button>
+    </div>
+
+    <div v-if="!form" class="py-12 text-center">
+      <span class="text-xs uppercase tracking-[0.2em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Product not found.</span>
     </div>
 
     <!-- Form -->
@@ -77,9 +73,9 @@
               <button 
                 type="button"
                 @click="removeImage(idx)"
-                class="absolute top-2 right-2 p-1.5 border transition-all duration-300 rounded-none bg-red-600/90 hover:bg-red-500 border-red-500 text-white shadow-lg"
+                class="absolute top-2 right-2 p-1.5  w-[30px] h-[30px] items-center justify-center flex  transition-all duration-300 rounded-none   bg-black opacity-60 text-white shadow-lg"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                 </svg>
               </button>
@@ -143,7 +139,6 @@
           v-model="form.name"
           type="text" 
           required
-          placeholder="E.G. OUD IMPERIAL"
           class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -161,7 +156,6 @@
           v-model="form.brand"
           type="text" 
           required
-          placeholder="E.G. SABALI"
           class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -182,7 +176,6 @@
             type="number" 
             min="1"
             required
-            placeholder="140"
             class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -195,13 +188,12 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >INITIAL STOCK</label>
+          >STOCK</label>
           <input 
             v-model.number="form.stock"
             type="number" 
             min="0"
             required
-            placeholder="25"
             class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -261,11 +253,10 @@
           v-model="form.description"
           rows="4"
           required
-          placeholder="DESCRIBE THE PERFUME AURA, NOTES, AND IMPRESSION..."
           class="w-full border px-4 py-3 text-base tracking-wide focus:outline-none transition-all duration-500 resize-none rounded-none"
           :class="store.isDarkMode.value 
-            ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
-            : 'bg-white border-black/10 placeholder-black/15 focus:border-black text-black'"
+            ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
+            : 'bg-white border-black/10 focus:border-black text-black'"
         ></textarea>
       </div>
 
@@ -278,34 +269,35 @@
           ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
           : 'bg-black text-white border-black hover:bg-white hover:text-black'"
       >
-        {{ loading ? 'CREATING...' : 'ADD PERFUME' }}
+        {{ loading ? 'SAVING...' : 'SAVE CHANGES' }}
       </button>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
-const { addProduct, loading } = store
+const { products, updateProduct, loading } = store
 
-const showSuccess = ref(false)
+const form = ref(null)
 const isDragging = ref(false)
 const fileInput = ref(null)
 
-const form = ref({
-  name: '',
-  brand: 'SABALI',
-  price: null,
-  stock: null,
-  category: 'Unisex',
-  volume: '100ml',
-  description: '',
-  images: []
+onMounted(() => {
+  // Find the product by ID in the store
+  const targetId = route.params.id
+  const targetProduct = products.value.find(p => p.id === targetId)
+
+  if (targetProduct) {
+    // Populate form clone, ensuring images is an array
+    form.value = { ...targetProduct, images: targetProduct.images ? [...targetProduct.images] : [] }
+  }
 })
 
 // Triggering native click
@@ -342,14 +334,12 @@ const removeImage = (index) => {
   form.value.images.splice(index, 1)
 }
 
+
 const submitForm = async () => {
-  await addProduct(form.value)
-  showSuccess.value = true
-  
-  // Wait a short moment for feedback, then navigate back to products list
-  setTimeout(() => {
-    router.push('/')
-  }, 1500)
+  if (!form.value) return
+  await updateProduct(route.params.id, form.value)
+  // Navigate back immediately on success
+  router.push('/')
 }
 </script>
 

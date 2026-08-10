@@ -1,47 +1,7 @@
 <template>
   <div class="space-y-8 animate-fade-in pb-12">
     <!-- Search & Navigation Title -->
-    <div class="space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 
-          class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
-          :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
-        >
-          Inventory
-        </h2>
-        <span 
-          class="text-xs uppercase tracking-[0.15em] border px-3 py-1 rounded-full transition-all duration-500"
-          :class="store.isDarkMode.value 
-            ? 'text-white/50 bg-zinc-900 border-white/5' 
-            : 'text-black/50 bg-zinc-100 border-black/5'"
-        >
-          {{ filteredProducts.length }} products found
-        </span>
-      </div>
-
-      <!-- Brutalist Search Bar -->
-      <div class="relative">
-        <input 
-          v-model="searchQuery"
-          type="text" 
-          placeholder="SEARCH PRODUCTS, BRANDS..."
-          class="w-full transition-all duration-500 px-5 py-4 text-xs uppercase tracking-[0.2em] font-medium focus:outline-none rounded-none"
-          :class="store.isDarkMode.value 
-            ? 'bg-zinc-950 border border-white/10 text-white placeholder-white/20 focus:border-white' 
-            : 'bg-white border border-black/10 text-black placeholder-black/30 focus:border-black'"
-        />
-        <span class="absolute right-5 top-1/2 -translate-y-1/2 transition-colors duration-500">
-          <svg v-if="!searchQuery" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5" :class="store.isDarkMode.value ? 'text-white/30' : 'text-black/30'">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.637 10.637Z" />
-          </svg>
-          <button v-else @click="searchQuery = ''" class="focus:outline-none" :class="store.isDarkMode.value ? 'text-white/50 hover:text-white' : 'text-black/50 hover:text-black'">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </span>
-      </div>
-    </div>
+     
 
     <!-- Collection Category Selector (Brutalist slider toggle) -->
     <div class="border-b pb-4 overflow-x-auto scrollbar-none transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/10' : 'border-black/10'">
@@ -106,30 +66,45 @@
           ? 'bg-zinc-950 border-white/10 hover:border-white/30' 
           : 'bg-white border-black/10 hover:border-black/30'"
       >
-        <!-- Badge Tag for stock warning -->
-        <span 
-          v-if="product.stock <= 3" 
-          class="absolute top-3 right-3 bg-red-600/90 text-white text-[8px] tracking-[0.15em] uppercase font-black px-2 py-0.5 rounded-sm"
-        >
-          Low Stock
-        </span>
 
-        <!-- Product Image (High fashion design aspect ratio) -->
+        <!-- Product Image (High fashion design aspect ratio with CSS Carousel) -->
         <div 
-          class="w-24 h-28 md:w-32 md:h-36 flex-shrink-0 flex items-center justify-center overflow-hidden relative transition-all duration-500 border"
+          class="w-24 h-36 md:w-32 md:h-36 flex-shrink-0 relative transition-all duration-500 border group"
           :class="store.isDarkMode.value 
-            ? 'bg-zinc-900 border-white/5 group-hover:border-white/20' 
-            : 'bg-zinc-100 border-black/5 group-hover:border-black/20'"
+            ? 'bg-zinc-900 border-white/5 hover:border-white/20' 
+            : 'bg-zinc-100 border-black/5 hover:border-black/20'"
         >
-          <img 
-            v-if="product.image" 
-            :src="product.image" 
-            :alt="product.name"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <div 
+            v-if="product.images && product.images.length > 0" 
+            class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative"
+            @scroll="(e) => handleImageScroll(e, product.id)"
+          >
+            <img 
+              v-for="(img, idx) in product.images" 
+              :key="idx"
+              :src="img" 
+              :alt="product.name"
+              class="snap-center min-w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+          <!-- Indicator Dots if multiple images -->
+          <div v-if="product.images && product.images.length > 1" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
+            <div 
+              v-for="(_, idx) in product.images" 
+              :key="'dot-'+idx" 
+              class="h-1 rounded-full shadow-md transition-all duration-300" 
+              :class="[
+                (activeImageMap[product.id] || 0) === idx 
+                  ? (store.isDarkMode.value ? 'bg-white w-3' : 'bg-black w-3') 
+                  : (store.isDarkMode.value ? 'bg-white/40 w-1' : 'bg-black/40 w-1')
+              ]"
+            ></div>
+          </div>
+
           <!-- Luxury Typography Placeholder if no image is present -->
           <div 
-            class="w-full h-full flex flex-col items-center justify-center p-2 text-center select-none"
+            v-if="!product.images || product.images.length === 0"
+            class="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-2 text-center select-none"
             :class="store.isDarkMode.value 
               ? 'bg-gradient-to-b from-zinc-900 to-black' 
               : 'bg-gradient-to-b from-zinc-100 to-zinc-50'"
@@ -219,7 +194,7 @@
             <div class="flex gap-2">
               <!-- Edit Button -->
               <button 
-                @click="openEditModal(product)"
+                @click="openEditPage(product.id)"
                 class="px-3.5 py-1.5 border text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300"
                 :class="store.isDarkMode.value 
                   ? 'border-white/10 hover:border-white bg-zinc-950 text-white/70 hover:text-white hover:bg-zinc-900' 
@@ -242,164 +217,6 @@
         </div>
       </div>
     </div>
-
-    <!-- EDIT OVERLAY (Slide Up Drawer) -->
-    <transition name="slide-up">
-      <div v-if="isEditOpen" class="fixed inset-0 z-[100] flex items-end justify-center select-none bg-black/70 backdrop-blur-sm px-4">
-        <!-- Backdrop Closer -->
-        <div class="absolute inset-0" @click="closeEditModal"></div>
-
-        <!-- Drawer Content -->
-        <div 
-          class="relative w-full max-w-lg border border-b-0 p-6 md:p-8 space-y-6 max-h-[85vh] overflow-y-auto scrollbar-thin transition-all duration-500"
-          :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10 text-black'"
-        >
-          
-          <!-- Header -->
-          <div class="flex items-center justify-between border-b pb-4 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/10' : 'border-black/10'">
-            <div class="space-y-1">
-              <span class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Modifying Item</span>
-              <h3 class="text-base uppercase tracking-[0.15em] font-black">Edit Perfume</h3>
-            </div>
-            <button 
-              @click="closeEditModal" 
-              class="p-2 border transition-all duration-300"
-              :class="store.isDarkMode.value 
-                ? 'border-white/10 hover:border-white text-white/50 hover:text-white' 
-                : 'border-black/10 hover:border-black text-black/50 hover:text-black'"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Edit Form -->
-          <form v-if="editingForm" @submit.prevent="submitEdit" class="space-y-5">
-            <!-- Name -->
-            <div class="space-y-2">
-              <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">PERFUME NAME</label>
-              <input 
-                v-model="editingForm.name"
-                type="text" 
-                required
-                class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-300 rounded-none"
-                :class="store.isDarkMode.value 
-                  ? 'bg-black border-white/10 focus:border-white text-white' 
-                  : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-              />
-            </div>
-
-            <!-- Brand -->
-            <div class="space-y-2">
-              <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">BRAND</label>
-              <input 
-                v-model="editingForm.brand"
-                type="text" 
-                required
-                class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-300 rounded-none"
-                :class="store.isDarkMode.value 
-                  ? 'bg-black border-white/10 focus:border-white text-white' 
-                  : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-              />
-            </div>
-
-            <!-- Double Grid -->
-            <div class="grid grid-cols-2 gap-4">
-              <!-- Price -->
-              <div class="space-y-2">
-                <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">PRICE ($)</label>
-                <input 
-                  v-model.number="editingForm.price"
-                  type="number" 
-                  min="1"
-                  required
-                  class="w-full border px-4 py-3 text-xs tracking-wider focus:outline-none transition-all duration-300 rounded-none"
-                  :class="store.isDarkMode.value 
-                    ? 'bg-black border-white/10 focus:border-white text-white' 
-                    : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-                />
-              </div>
-
-              <!-- Stock -->
-              <div class="space-y-2">
-                <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">STOCK</label>
-                <input 
-                  v-model.number="editingForm.stock"
-                  type="number" 
-                  min="0"
-                  required
-                  class="w-full border px-4 py-3 text-xs tracking-wider focus:outline-none transition-all duration-300 rounded-none"
-                  :class="store.isDarkMode.value 
-                    ? 'bg-black border-white/10 focus:border-white text-white' 
-                    : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-                />
-              </div>
-            </div>
-
-            <!-- Category & Volume Selector -->
-            <div class="grid grid-cols-2 gap-4">
-              <!-- Category -->
-              <div class="space-y-2">
-                <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">CATEGORY</label>
-                <select 
-                  v-model="editingForm.category"
-                  class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-300 rounded-none"
-                  :class="store.isDarkMode.value 
-                    ? 'bg-black border-white/10 focus:border-white text-white' 
-                    : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-                >
-                  <option value="Men">Men</option>
-                  <option value="Women">Women</option>
-                  <option value="Unisex">Unisex</option>
-                </select>
-              </div>
-
-              <!-- Volume -->
-              <div class="space-y-2">
-                <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">VOLUME</label>
-                <select 
-                  v-model="editingForm.volume"
-                  class="w-full border px-4 py-3 text-xs uppercase tracking-[0.15em] focus:outline-none transition-all duration-300 rounded-none"
-                  :class="store.isDarkMode.value 
-                    ? 'bg-black border-white/10 focus:border-white text-white' 
-                    : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-                >
-                  <option value="50ml">50ml</option>
-                  <option value="100ml">100ml</option>
-                  <option value="150ml">150ml</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div class="space-y-2">
-              <label class="block text-[10px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">DESCRIPTION</label>
-              <textarea 
-                v-model="editingForm.description"
-                rows="3"
-                required
-                class="w-full border px-4 py-3 text-xs tracking-wide focus:outline-none transition-all duration-300 resize-none rounded-none"
-                :class="store.isDarkMode.value 
-                  ? 'bg-black border-white/10 focus:border-white text-white' 
-                  : 'bg-zinc-50 border-black/10 focus:border-black text-black'"
-              ></textarea>
-            </div>
-
-            <!-- Submit -->
-            <button 
-              type="submit"
-              class="w-full py-4 text-xs font-black uppercase tracking-[0.35em] border transition-all duration-500 ease-out mt-2"
-              :class="store.isDarkMode.value 
-                ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
-                : 'bg-black text-white border-black hover:bg-white hover:text-black'"
-            >
-              SAVE CHANGES
-            </button>
-          </form>
-        </div>
-      </div>
-    </transition>
 
     <!-- DELETE CONFIRMATION MODAL -->
     <transition name="fade">
@@ -446,19 +263,32 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 
+const router = useRouter()
 const store = useStore()
 const { products, loading, deleteProduct, updateProduct } = store
 
 const searchQuery = ref('')
 const activeTab = ref('all')
 
+// Track active product image index for indicators
+const activeImageMap = ref({})
+
+const handleImageScroll = (e, productId) => {
+  const scrollLeft = e.target.scrollLeft
+  const width = e.target.clientWidth
+  if (width === 0) return
+  // Calculate which image is mostly in view
+  const activeIndex = Math.round(scrollLeft / width)
+  activeImageMap.value[productId] = activeIndex
+}
+
 const tabs = [
   { label: 'ALL', value: 'all' },
   { label: 'MEN', value: 'Men' },
   { label: 'WOMEN', value: 'Women' },
-  { label: 'UNISEX', value: 'Unisex' }
 ]
 
 const filteredProducts = computed(() => {
@@ -471,36 +301,9 @@ const filteredProducts = computed(() => {
   })
 })
 
-// Editing states
-const isEditOpen = ref(false)
-const editingForm = ref(null)
-let originalId = null
-
-const openEditModal = (product) => {
-  originalId = product.id
-  editingForm.value = {
-    name: product.name,
-    brand: product.brand,
-    price: product.price,
-    stock: product.stock,
-    category: product.category,
-    volume: product.volume,
-    description: product.description,
-    image: product.image
-  }
-  isEditOpen.value = true
-}
-
-const closeEditModal = () => {
-  isEditOpen.value = false
-  editingForm.value = null
-  originalId = null
-}
-
-const submitEdit = async () => {
-  if (!originalId || !editingForm.value) return
-  await updateProduct(originalId, editingForm.value)
-  closeEditModal()
+// Editing routing
+const openEditPage = (id) => {
+  router.push(`/edit-${id}`)
 }
 
 // Deleting states
