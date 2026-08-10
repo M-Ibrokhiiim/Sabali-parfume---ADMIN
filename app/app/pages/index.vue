@@ -66,13 +66,6 @@
           ? 'bg-zinc-950 border-white/10 hover:border-white/30' 
           : 'bg-white border-black/10 hover:border-black/30'"
       >
-        <!-- Badge Tag for stock warning -->
-        <span 
-          v-if="product.stock <= 3" 
-          class="absolute top-3 right-3 bg-red-600/90 text-white text-[8px] tracking-[0.15em] uppercase font-black px-2 py-0.5 rounded-sm"
-        >
-          Low Stock
-        </span>
 
         <!-- Product Image (High fashion design aspect ratio with CSS Carousel) -->
         <div 
