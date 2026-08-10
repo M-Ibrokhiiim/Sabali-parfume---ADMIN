@@ -16,15 +16,15 @@
         class="border-b sticky top-0 z-50 py-5 px-6  backdrop-blur-md transition-all duration-500 w-full"
         :class="store.isDarkMode.value ? 'border-white/10 bg-black/80' : 'border-black/10 bg-white/80'"
       >
-        <div class="w-full mx-auto  flex items-center justify-between">
+        <div class="w-full mx-auto  flex items-center justify-between ">
           <h1 
-            class="logo text-xl tracking-[8px] font-black uppercase transition-colors duration-500"
+            class="logo text-xl tracking-[8px] ml-[-10px]  font-black uppercase transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
           >
             SABALI
           </h1>
           
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-4  ml-[57vw]">
             <!-- Brutalist Theme Toggle Button -->
             <button 
               @click="store.toggleTheme" 
@@ -59,7 +59,7 @@
         :class="store.isDarkMode.value ? 'bg-black/90 border-white/10' : 'bg-white/90 border-black/10'"
       >
       
-      <div class="w-full  mx-auto gap-16 flex relative">
+      <div class="w-full  mx-auto gap-20 ml-[-1vw] flex relative">
           <!-- Products Tab -->
           <NuxtLink 
             to="/" 
