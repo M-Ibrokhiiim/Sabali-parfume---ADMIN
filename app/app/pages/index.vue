@@ -81,7 +81,11 @@
             ? 'bg-zinc-900 border-white/5 hover:border-white/20' 
             : 'bg-zinc-100 border-black/5 hover:border-black/20'"
         >
-          <div v-if="product.images && product.images.length > 0" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative">
+          <div 
+            v-if="product.images && product.images.length > 0" 
+            class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative"
+            @scroll="(e) => handleImageScroll(e, product.id)"
+          >
             <img 
               v-for="(img, idx) in product.images" 
               :key="idx"
@@ -91,8 +95,17 @@
             />
           </div>
           <!-- Indicator Dots if multiple images -->
-          <div v-if="product.images && product.images.length > 1" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1 z-10 pointer-events-none">
-            <div v-for="(_, idx) in product.images" :key="'dot-'+idx" class="w-1 h-1 rounded-full shadow-md" :class="store.isDarkMode.value ? 'bg-white/80' : 'bg-black/80'"></div>
+          <div v-if="product.images && product.images.length > 1" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
+            <div 
+              v-for="(_, idx) in product.images" 
+              :key="'dot-'+idx" 
+              class="h-1 rounded-full shadow-md transition-all duration-300" 
+              :class="[
+                (activeImageMap[product.id] || 0) === idx 
+                  ? (store.isDarkMode.value ? 'bg-white w-3' : 'bg-black w-3') 
+                  : (store.isDarkMode.value ? 'bg-white/40 w-1' : 'bg-black/40 w-1')
+              ]"
+            ></div>
           </div>
 
           <!-- Luxury Typography Placeholder if no image is present -->
@@ -266,6 +279,18 @@ const { products, loading, deleteProduct, updateProduct } = store
 
 const searchQuery = ref('')
 const activeTab = ref('all')
+
+// Track active product image index for indicators
+const activeImageMap = ref({})
+
+const handleImageScroll = (e, productId) => {
+  const scrollLeft = e.target.scrollLeft
+  const width = e.target.clientWidth
+  if (width === 0) return
+  // Calculate which image is mostly in view
+  const activeIndex = Math.round(scrollLeft / width)
+  activeImageMap.value[productId] = activeIndex
+}
 
 const tabs = [
   { label: 'ALL', value: 'all' },
