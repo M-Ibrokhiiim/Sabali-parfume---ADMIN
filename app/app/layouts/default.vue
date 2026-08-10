@@ -24,7 +24,7 @@
             SABALI
           </h1>
           
-          <div class="flex items-center gap-4  ml-[55vw]">
+          <div class="flex items-center gap-4">
             <!-- Brutalist Theme Toggle Button -->
             <button 
               @click="store.toggleTheme" 
@@ -59,7 +59,7 @@
         :class="store.isDarkMode.value ? 'bg-black/90 border-white/10' : 'bg-white/90 border-black/10'"
       >
       
-      <div class="w-full  mx-auto gap-20 ml-[-1vw] flex relative">
+      <div class="w-full mx-auto gap-20 flex relative">
           <!-- Products Tab -->
           <NuxtLink 
             to="/" 
