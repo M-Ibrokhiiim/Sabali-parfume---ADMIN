@@ -9,7 +9,7 @@ export interface Product {
   category: 'Men' | 'Women' | 'Unisex'
   stock: number
   description: string
-  image: string
+  images: string[]
   sales: number
   rating: number
   createdAt: string
@@ -26,7 +26,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     category: 'Unisex',
     stock: 14,
     description: 'An intense, dark wood perfume featuring deep notes of agarwood, sandalwood, and rich incense.',
-    image: '',
+    images: [],
     sales: 34,
     rating: 4.9,
     createdAt: new Date().toISOString()
@@ -40,7 +40,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     category: 'Women',
     stock: 8,
     description: 'Elegant Turkish rose wrapped in smoky patchouli and delicate white musk.',
-    image: '',
+    images: [],
     sales: 22,
     rating: 4.7,
     createdAt: new Date().toISOString()
@@ -54,7 +54,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     category: 'Men',
     stock: 3,
     description: 'Crisp grapefruit opening into metallic vetiver notes, earth, and amberwood.',
-    image: '',
+    images: [],
     sales: 41,
     rating: 4.8,
     createdAt: new Date().toISOString()
@@ -68,7 +68,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     category: 'Unisex',
     stock: 22,
     description: 'Pristine high-altitude cedar, crisp ozone, fresh pine needle, and cold leather.',
-    image: '',
+    images: [],
     sales: 18,
     rating: 4.6,
     createdAt: new Date().toISOString()
@@ -107,7 +107,17 @@ export const useStore = () => {
     const savedProducts = localStorage.getItem('sabali_products')
     if (savedProducts) {
       try {
-        products.value = JSON.parse(savedProducts)
+        let parsed = JSON.parse(savedProducts)
+        // Migration: convert single image to images array
+        parsed = parsed.map((p: any) => {
+          if (p.image && !p.images) {
+            p.images = [p.image]
+            delete p.image
+          }
+          if (!p.images) p.images = []
+          return p
+        })
+        products.value = parsed
       } catch (e) {
         console.error('Error parsing local storage products:', e)
         products.value = [...DEFAULT_PRODUCTS]
@@ -128,17 +138,40 @@ export const useStore = () => {
     if (isBrowser) {
       const savedProducts = localStorage.getItem('sabali_products')
       if (savedProducts) {
-        products.value = JSON.parse(savedProducts)
+        try {
+          let parsed = JSON.parse(savedProducts)
+          parsed = parsed.map((p: any) => {
+            if (p.image && !p.images) {
+              p.images = [p.image]
+              delete p.image
+            }
+            if (!p.images) p.images = []
+            return p
+          })
+          products.value = parsed
+        } catch (e) {
+          // ignore
+        }
       }
     }
 
     try {
       // Try to fetch from real NestJS backend
-      const response = await $fetch<Product[]>(`${apiBaseUrl.value}/products`, {
+      let response = await $fetch<Product[]>(`${apiBaseUrl.value}/products`, {
         timeout: 3000 // fail fast if offline
       })
       
       if (response && Array.isArray(response)) {
+        // Run migration for backend data as well
+        response = response.map((p: any) => {
+          if (p.image && !p.images) {
+            p.images = [p.image]
+            delete p.image
+          }
+          if (!p.images) p.images = []
+          return p
+        })
+        
         products.value = response
         if (isBrowser) {
           localStorage.setItem('sabali_products', JSON.stringify(response))
