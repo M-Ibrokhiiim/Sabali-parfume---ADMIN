@@ -5,12 +5,12 @@
       <span 
         class="text-[9px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
         :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
-      >New Creation</span>
+      >{{ store.t('titleCreateNew') }}</span>
       <h2 
         class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
         :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
       >
-        Add Product
+        {{ store.t('titleProduct') }}
       </h2>
     </div>
 
@@ -29,9 +29,9 @@
         </svg>
       </div>
       <div class="space-y-1">
-        <h3 class="text-sm uppercase tracking-[0.2em] font-black">CREATION SUCCESSFUL</h3>
+        <h3 class="text-sm uppercase tracking-[0.2em] font-black">{{ store.t('creationSuccessful') }}</h3>
         <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">
-          The perfume has been integrated into SABALI inventory.
+          {{ store.t('integratedInventory') }}
         </p>
       </div>
     </div>
@@ -45,9 +45,9 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >PRODUCT IMAGES</label>
+          >{{ store.t('productImages') }}</label>
           <span class="text-[9px] font-bold" :class="store.isDarkMode.value ? 'text-white/30' : 'text-black/30'">
-            {{ form.images.length }} SELECTED
+            {{ form.images.length }} {{ store.t('selected') }}
           </span>
         </div>
         
@@ -94,7 +94,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mb-2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              <span class="text-[9px] uppercase tracking-[0.2em] font-bold">ADD MORE</span>
+              <span class="text-[9px] uppercase tracking-[0.2em] font-bold">{{ store.t('addMore') }}</span>
             </div>
 
           </div>
@@ -116,8 +116,8 @@
               <p 
                 class="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors duration-500"
                 :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-              >DRAG & DROP IMAGES</p>
-              <p class="text-[8px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">Select multiple local files (JPG, PNG)</p>
+              >{{ store.t('dragDropTitle') }}</p>
+              <p class="text-[8px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">{{ store.t('dragDropDesc') }}</p>
             </div>
           </div>
 
@@ -138,12 +138,12 @@
         <label 
           class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
           :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-        >PERFUME NAME</label>
+        >{{ store.t('labelName') }}</label>
         <input 
           v-model="form.name"
           type="text" 
           required
-          placeholder="E.G. OUD IMPERIAL"
+          :placeholder="store.t('placeholderName')"
           class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -156,12 +156,12 @@
         <label 
           class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
           :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-        >BRAND NAME</label>
+        >{{ store.t('labelBrand') }}</label>
         <input 
           v-model="form.brand"
           type="text" 
           required
-          placeholder="E.G. SABALI"
+          :placeholder="store.t('placeholderBrand')"
           class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -176,7 +176,7 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >PRICE ($ USD)</label>
+          >{{ store.t('labelPrice') }}</label>
           <input 
             v-model.number="form.price"
             type="number" 
@@ -195,7 +195,7 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >INITIAL STOCK</label>
+          >{{ store.t('labelStock') }}</label>
           <input 
             v-model.number="form.stock"
             type="number" 
@@ -217,7 +217,7 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >CATEGORY</label>
+          >{{ store.t('labelCategory') }}</label>
           <select 
             v-model="form.category"
             class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
@@ -225,9 +225,9 @@
               ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
               : 'bg-white border-black/10 focus:border-black text-black'"
           >
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Unisex">Unisex</option>
+            <option value="Men">{{ store.t('catMen') }}</option>
+            <option value="Women">{{ store.t('catWomen') }}</option>
+            <option value="Unisex">{{ store.t('catUnisex') }}</option>
           </select>
         </div>
 
@@ -236,7 +236,7 @@
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >VOLUME</label>
+          >{{ store.t('labelVolume') }}</label>
           <select 
             v-model="form.volume"
             class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
@@ -256,12 +256,12 @@
         <label 
           class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
           :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-        >DESCRIPTION</label>
+        >{{ store.t('labelDesc') }}</label>
         <textarea 
           v-model="form.description"
           rows="4"
           required
-          placeholder="DESCRIBE THE PERFUME AURA, NOTES, AND IMPRESSION..."
+          :placeholder="store.t('placeholderDesc')"
           class="w-full border px-4 py-3 text-base tracking-wide focus:outline-none transition-all duration-500 resize-none rounded-none"
           :class="store.isDarkMode.value 
             ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -278,7 +278,7 @@
           ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
           : 'bg-black text-white border-black hover:bg-white hover:text-black'"
       >
-        {{ loading ? 'CREATING...' : 'ADD PERFUME' }}
+        {{ loading ? store.t('btnSaving') : store.t('btnPublish') }}
       </button>
     </form>
   </div>

@@ -1,13 +1,13 @@
 <template>
   <!-- Outer wrapper to center the app frame on all screens -->
   <div 
-    class="min-h-screen flex sm:items-center justify-center p-0 sm:p-4 transition-colors sm:-mt-2 duration-500 w-full"
+    class="min-h-dvh flex sm:items-center justify-center p-0 sm:p-4 transition-colors sm:-mt-2 duration-500 w-full"
     :class="store.isDarkMode.value ? 'bg-black' : 'bg-zinc-100'"
   >
     
     <!-- The Measured App Frame -->
     <div 
-      class="w-full max-w-[400px] min-w-[350px] min-h-screen sm:min-h-0 sm:h-[98vh] flex flex-col font-sans select-none relative overflow-visible sm:overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
+      class="w-full max-w-[400px] min-w-[350px] min-h-dvh sm:min-h-0 sm:h-[98vh] flex flex-col font-sans select-none relative overflow-x-hidden overflow-y-visible sm:overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
       :class="store.isDarkMode.value ? 'bg-black text-white border-white/10' : 'bg-zinc-50 text-black border-black/10'"
     >
       
@@ -25,8 +25,38 @@
           </h1>
           
           <div class="flex items-center gap-4">
-            <!-- Brutalist Theme Toggle Button -->
+            
+            <!-- Language Switcher (Visible ONLY on profile page) -->
+            <div 
+              v-if="route.path === '/profile'" 
+              class="flex items-center border transition-all duration-300 rounded-none overflow-hidden"
+              :class="store.isDarkMode.value ? 'border-white/20' : 'border-black/20'"
+            >
+              <button 
+                @click="store.setLocale('uz')"
+                class="px-2.5 py-1.5 text-[10px] uppercase tracking-[0.1em] font-black transition-all duration-300"
+                :class="store.locale.value === 'uz' 
+                  ? (store.isDarkMode.value ? 'bg-white text-black' : 'bg-black text-white')
+                  : (store.isDarkMode.value ? 'bg-transparent text-white/50 hover:bg-white/10' : 'bg-transparent text-black/50 hover:bg-black/10')"
+              >
+                UZB
+              </button>
+              <button 
+                @click="store.setLocale('ru')"
+                class="px-2.5 py-1.5 text-[10px] uppercase tracking-[0.1em] font-black transition-all duration-300 border-l"
+                :class="[
+                  store.locale.value === 'ru' 
+                    ? (store.isDarkMode.value ? 'bg-white text-black border-transparent' : 'bg-black text-white border-transparent')
+                    : (store.isDarkMode.value ? 'bg-transparent text-white/50 hover:bg-white/10 border-white/20' : 'bg-transparent text-black/50 hover:bg-black/10 border-black/20')
+                ]"
+              >
+                RUS
+              </button>
+            </div>
+
+            <!-- Brutalist Theme Toggle Button (Hidden on profile page) -->
             <button 
+              v-else
               @click="store.toggleTheme" 
               class="border p-2.5 flex items-center justify-center transition-all duration-300 rounded-full"
               :class="store.isDarkMode.value 
@@ -73,7 +103,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 transition-transform duration-300 group-hover:scale-110">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 0 1 2.008 1.24l.885 1.77a2.25 2.25 0 0 0 2.007 1.24h1.98a2.25 2.25 0 0 0 2.007-1.24l.885-1.77a2.25 2.25 0 0 1 2.007-1.24h3.86m-18 0h18m-18 0-1.25-6.25a2.25 2.25 0 0 1 2.25-2.25h12.5a2.25 2.25 0 0 1 2.25 2.25l-1.25 6.25m-18 0v6.75A2.25 2.25 0 0 0 4.5 21.75h15a2.25 2.25 0 0 0 2.25-2.25v-6.75" />
             </svg>
-            <span class="text-[9px] uppercase tracking-[0.2em] font-semibold transition-all">Products</span>
+            <span class="text-[9px] uppercase tracking-[0.2em] font-semibold transition-all">{{ store.t('navProducts') }}</span>
             <div 
               class="h-[3px] rounded-full transition-all duration-500 absolute bottom-[-8px] w-6" 
               :class="[
@@ -124,7 +154,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 transition-transform duration-300 group-hover:scale-110">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
-            <span class="text-[9px] uppercase tracking-[0.2em] font-semibold">Profile</span>
+            <span class="text-[9px] uppercase tracking-[0.2em] font-semibold">{{ store.t('navProfile') }}</span>
             <div 
               class="h-[3px] rounded-full transition-all duration-500 absolute bottom-[-8px] w-6" 
               :class="[
@@ -151,9 +181,18 @@ const store = useStore()
 
 // Dynamically bind document body and html classes for dark/light mode
 useHead({
+  htmlAttrs: {
+    class: computed(() => store.isDarkMode.value ? 'bg-black transition-colors duration-500' : 'bg-zinc-100 transition-colors duration-500')
+  },
   bodyAttrs: {
     class: computed(() => store.isDarkMode.value ? 'bg-black text-white transition-colors duration-500' : 'bg-zinc-100 text-black transition-colors duration-500')
-  }
+  },
+  meta: [
+    {
+      name: 'theme-color',
+      content: computed(() => store.isDarkMode.value ? '#000000' : '#f4f4f5')
+    }
+  ]
 })
 
 onMounted(() => {

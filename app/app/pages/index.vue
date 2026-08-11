@@ -27,7 +27,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-20 space-y-4">
       <div class="w-8 h-8 border-2 rounded-full animate-spin" :class="store.isDarkMode.value ? 'border-white/15 border-t-white' : 'border-black/15 border-t-black'"></div>
-      <span class="text-xs uppercase tracking-[0.2em]" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Syncing database...</span>
+      <span class="text-xs uppercase tracking-[0.2em]" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('syncingDb') }}</span>
     </div>
 
     <!-- Empty State -->
@@ -42,8 +42,8 @@
         </svg>
       </div>
       <div class="space-y-1">
-        <h3 class="text-sm uppercase tracking-[0.2em] font-bold">No Products Found</h3>
-        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Try adjusting your filters or search criteria.</p>
+        <h3 class="text-sm uppercase tracking-[0.2em] font-bold">{{ store.t('noProductsFound') }}</h3>
+        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('tryAdjusting') }}</p>
       </div>
       <NuxtLink 
         to="/add"
@@ -52,12 +52,12 @@
           ? 'border-white text-white hover:bg-white hover:text-black' 
           : 'border-black text-black hover:bg-black hover:text-white'"
       >
-        Create Product
+        {{ store.t('createProduct') }}
       </NuxtLink>
     </div>
 
     <!-- Product Grid -->
-    <div v-else class="grid grid-cols-1 gap-6">
+    <div v-else class="grid grid-cols-1  gap-6">
       <div 
         v-for="product in filteredProducts" 
         :key="product.id"
@@ -121,7 +121,7 @@
               class="text-[8px] uppercase tracking-[0.15em] font-light mt-1"
               :class="store.isDarkMode.value ? 'text-white/15' : 'text-black/15'"
             >
-              {{ product.category }}
+              {{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Uniseks') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Унисекс') }}
             </span>
           </div>
         </div>
@@ -158,7 +158,7 @@
                 :class="store.isDarkMode.value 
                   ? 'text-white/30 border-white/5 bg-zinc-900/50' 
                   : 'text-black/40 border-black/5 bg-zinc-100/50'"
-              >{{ product.category }}</span>
+              >{{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Uniseks') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Унисекс') }}</span>
             </div>
 
             <!-- Stock bar -->
@@ -166,7 +166,7 @@
               <span 
                 class="text-[9px] uppercase tracking-[0.15em] font-bold min-w-[50px] transition-colors duration-500"
                 :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
-              >Stock: {{ product.stock }}</span>
+              >{{ store.t('stockLabel') }} {{ product.stock }}</span>
               <div class="flex-1 h-1 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
                 <div 
                   class="h-full rounded-full transition-all duration-500" 
@@ -185,13 +185,8 @@
 
           <!-- Bottom Row: Statistics & Brutalist Action Buttons -->
           <div class="flex items-center justify-between border-t pt-3 mt-3 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
-            <span 
-              class="text-[9px] uppercase tracking-[0.15em] transition-colors duration-500"
-              :class="store.isDarkMode.value ? 'text-white/30' : 'text-black/30'"
-            >
-              Sales: <strong :class="store.isDarkMode.value ? 'text-white/80' : 'text-black/80'">{{ product.sales || 0 }}</strong>
-            </span>
-            <div class="flex gap-2">
+           
+            <div class="flex">
               <!-- Edit Button -->
               <button 
                 @click="openEditPage(product.id)"
@@ -200,7 +195,7 @@
                   ? 'border-white/10 hover:border-white bg-zinc-950 text-white/70 hover:text-white hover:bg-zinc-900' 
                   : 'border-black/10 hover:border-black bg-white text-black/70 hover:text-black hover:bg-zinc-100'"
               >
-                Edit
+                {{ store.t('btnEdit') }}
               </button>
               <!-- Delete Button -->
               <button 
@@ -210,7 +205,7 @@
                   ? 'border-red-950/40 hover:border-red-500 hover:bg-red-950/20 text-red-500/70 hover:text-red-400 bg-zinc-950' 
                   : 'border-red-100 hover:border-red-600 hover:bg-red-50 text-red-600 hover:text-red-700 bg-white'"
               >
-                Delete
+                {{ store.t('btnDelete') }}
               </button>
             </div>
           </div>
@@ -233,9 +228,9 @@
             </div>
             
             <div class="space-y-2">
-              <h4 class="text-base uppercase tracking-[0.2em] font-black">Confirm Deletion</h4>
+              <h4 class="text-base uppercase tracking-[0.2em] font-black">{{ store.t('confirmDeletionTitle') }}</h4>
               <p class="text-xs font-light leading-relaxed" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-                Are you sure you want to permanently delete <strong :class="store.isDarkMode.value ? 'text-white' : 'text-black'">{{ productToDelete?.name }}</strong>? This action is irreversible.
+                {{ store.t('confirmDeletionText1') }}<strong :class="store.isDarkMode.value ? 'text-white' : 'text-black'">{{ productToDelete?.name }}</strong>{{ store.t('confirmDeletionText2') }}
               </p>
             </div>
 
@@ -247,13 +242,13 @@
                   ? 'border-white/10 bg-zinc-900 text-white/80 hover:text-white hover:border-white' 
                   : 'border-black/10 bg-zinc-100 text-black/80 hover:text-black hover:border-black'"
               >
-                Cancel
+                {{ store.t('btnCancel') }}
               </button>
               <button 
                 @click="submitDelete"
                 class="flex-1 py-3 bg-red-600 border border-red-600 text-white hover:bg-black hover:text-red-500 hover:border-red-500 transition-all duration-300 text-xs uppercase tracking-[0.2em] font-bold"
               >
-                DELETE
+                {{ store.t('btnDeleteUpper') }}
               </button>
             </div>
           </div>
@@ -287,11 +282,11 @@ const handleImageScroll = (e, productId) => {
   activeImageMap.value[productId] = activeIndex
 }
 
-const tabs = [
-  { label: 'ALL', value: 'all' },
-  { label: 'MEN', value: 'Men' },
-  { label: 'WOMEN', value: 'Women' },
-]
+const tabs = computed(() => [
+  { label: store.t('tabAll'), value: 'all' },
+  { label: store.t('tabMen'), value: 'Men' },
+  { label: store.t('tabWomen'), value: 'Women' },
+])
 
 const filteredProducts = computed(() => {
   return products.value.filter(p => {

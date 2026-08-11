@@ -5,12 +5,12 @@
       <span 
         class="text-[9px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
         :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
-      >Store Insights</span>
+      >{{ store.t('storeInsights') }}</span>
       <h2 
         class="text-xl uppercase tracking-[0.25em] font-extrabold transition-colors duration-500"
         :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
       >
-        Profile & Stats
+        {{ store.t('profileStats') }}
       </h2>
     </div>
 
@@ -27,7 +27,7 @@
         SB
       </div>
       <div class="space-y-1 flex-1 min-w-0">
-        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Authorized Account</p>
+        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('authorizedAccount') }}</p>
         <h3 class="text-base uppercase tracking-[0.15em] font-extrabold truncate" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">SABALI SELLER</h3>
         <p class="text-xs font-light truncate" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">admin@sabali-parfums.com</p>
       </div>
@@ -35,7 +35,7 @@
         class="text-[9px] uppercase tracking-[0.2em] font-black border px-3 py-1 self-start transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white bg-white text-black' : 'border-black bg-black text-white'"
       >
-        OWNER
+        {{ store.t('owner') }}
       </span>
     </div>
 
@@ -47,9 +47,9 @@
         class="border p-5 space-y-2 transition-all duration-500"
         :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
       >
-        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">TOTAL STYLES</span>
+        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('totalStyles') }}</span>
         <p class="text-3xl font-black tracking-tight">{{ productsCount }}</p>
-        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">Active perfume models</span>
+        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">{{ store.t('activePerfumes') }}</span>
       </div>
 
       <!-- Total Stock Units -->
@@ -57,9 +57,9 @@
         class="border p-5 space-y-2 transition-all duration-500"
         :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
       >
-        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">STOCK UNITS</span>
+        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('stockUnits') }}</span>
         <p class="text-3xl font-black tracking-tight">{{ totalStock }}</p>
-        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">Available in warehouse</span>
+        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">{{ store.t('availableWarehouse') }}</span>
       </div>
 
       <!-- Out of Stock Warnings -->
@@ -72,11 +72,11 @@
           outOfStockCount > 0 ? (store.isDarkMode.value ? 'border-amber-600/30' : 'border-amber-500/40 bg-amber-50/20') : ''
         ]"
       >
-        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">DEPLETED STOCK</span>
+        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('depletedStock') }}</span>
         <p class="text-3xl font-black tracking-tight" :class="outOfStockCount > 0 ? 'text-amber-500' : (store.isDarkMode.value ? 'text-white' : 'text-black')">
           {{ outOfStockCount }}
         </p>
-        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">Perfumes at zero stock</span>
+        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">{{ store.t('zeroStock') }}</span>
       </div>
 
       <!-- Est Revenue -->
@@ -84,9 +84,9 @@
         class="border p-5 space-y-2 transition-all duration-500"
         :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
       >
-        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">EST. REVENUE</span>
+        <span class="text-[9px] uppercase tracking-[0.2em] font-bold block" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('estRevenue') }}</span>
         <p class="text-3xl font-black tracking-tight text-green-500">${{ estimatedRevenue }}</p>
-        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">Based on registered sales</span>
+        <span class="text-[8px] uppercase tracking-[0.15em] block" :class="store.isDarkMode.value ? 'text-white/20' : 'text-black/20'">{{ store.t('basedOnSales') }}</span>
       </div>
 
     </div>
@@ -97,15 +97,15 @@
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
     >
       <div class="border-b pb-3 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
-        <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">Category Distribution</h4>
+        <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">{{ store.t('categoryDistribution') }}</h4>
       </div>
 
       <div class="space-y-4">
         <!-- Men Bar -->
         <div class="space-y-1">
           <div class="flex justify-between text-[10px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/70' : 'text-black/70'">
-            <span>MEN PERFUMES</span>
-            <span class="font-bold">{{ menPercentage }}% ({{ categoryCounts.Men }} styles)</span>
+            <span>{{ store.t('menPerfumes') }}</span>
+            <span class="font-bold">{{ menPercentage }}% ({{ categoryCounts.Men }} {{ store.t('styles') }})</span>
           </div>
           <div class="h-1.5 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
             <div class="h-full transition-all duration-700" :class="store.isDarkMode.value ? 'bg-white' : 'bg-black'" :style="{ width: `${menPercentage}%` }"></div>
@@ -115,8 +115,8 @@
         <!-- Women Bar -->
         <div class="space-y-1">
           <div class="flex justify-between text-[10px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/70' : 'text-black/70'">
-            <span>WOMEN PERFUMES</span>
-            <span class="font-bold">{{ womenPercentage }}% ({{ categoryCounts.Women }} styles)</span>
+            <span>{{ store.t('womenPerfumes') }}</span>
+            <span class="font-bold">{{ womenPercentage }}% ({{ categoryCounts.Women }} {{ store.t('styles') }})</span>
           </div>
           <div class="h-1.5 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
             <div class="h-full transition-all duration-700" :class="store.isDarkMode.value ? 'bg-white' : 'bg-black'" :style="{ width: `${womenPercentage}%` }"></div>
@@ -126,8 +126,8 @@
         <!-- Unisex Bar -->
         <div class="space-y-1">
           <div class="flex justify-between text-[10px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/70' : 'text-black/70'">
-            <span>UNISEX PERFUMES</span>
-            <span class="font-bold">{{ unisexPercentage }}% ({{ categoryCounts.Unisex }} styles)</span>
+            <span>{{ store.t('unisexPerfumes') }}</span>
+            <span class="font-bold">{{ unisexPercentage }}% ({{ categoryCounts.Unisex }} {{ store.t('styles') }})</span>
           </div>
           <div class="h-1.5 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
             <div class="h-full transition-all duration-700" :class="store.isDarkMode.value ? 'bg-white' : 'bg-black'" :style="{ width: `${unisexPercentage}%` }"></div>
@@ -142,17 +142,17 @@
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
     >
       <div class="border-b pb-3 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
-        <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">NestJS Backend Connection</h4>
+        <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">{{ store.t('backendConnection') }}</h4>
       </div>
 
       <div class="space-y-4">
         <p class="text-xs leading-relaxed font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-          Bind this dashboard directly to your running NestJS backend application. Data will synchronize instantly with the backend REST endpoints.
+          {{ store.t('backendDesc') }}
         </p>
 
         <!-- API Url form -->
         <div class="space-y-2">
-          <label class="block text-[9px] uppercase tracking-[0.2em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">NESTJS BASE URL</label>
+          <label class="block text-[9px] uppercase tracking-[0.2em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('backendUrl') }}</label>
           <div class="flex gap-2">
             <input 
               v-model="apiUrlInput"
@@ -170,22 +170,22 @@
                 ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
                 : 'bg-black text-white border-black hover:bg-white hover:text-black'"
             >
-              Connect
+              {{ store.t('connect') }}
             </button>
           </div>
         </div>
 
         <!-- Connection Indicators -->
         <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] border-t pt-4 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
-          <span :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Target endpoint:</span>
+          <span :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('targetEndpoint') }}</span>
           <span class="font-bold select-all" :class="store.isDarkMode.value ? 'text-white/80' : 'text-black/80'">{{ store.apiBaseUrl.value }}</span>
         </div>
 
         <div class="flex items-center justify-between text-[10px] uppercase tracking-[0.15em]">
-          <span :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">Sync Protocol:</span>
+          <span :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('syncProtocol') }}</span>
           <span class="text-green-500 font-bold flex items-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
-            ACTIVE HYBRID
+            {{ store.t('activeHybrid') }}
           </span>
         </div>
       </div>
@@ -199,8 +199,8 @@
         : 'border-red-100 bg-red-50/30 text-black'"
     >
       <div class="space-y-0.5">
-        <h5 class="text-[10px] uppercase tracking-[0.15em] font-bold text-red-500">Database Cache Reset</h5>
-        <p class="text-[9px] font-light uppercase tracking-wide" :class="store.isDarkMode.value ? 'text-red-500/60' : 'text-red-500/80'">Restore mock defaults & purge LocalStorage</p>
+        <h5 class="text-[10px] uppercase tracking-[0.15em] font-bold text-red-500">{{ store.t('dbCacheReset') }}</h5>
+        <p class="text-[9px] font-light uppercase tracking-wide" :class="store.isDarkMode.value ? 'text-red-500/60' : 'text-red-500/80'">{{ store.t('dbCacheDesc') }}</p>
       </div>
       <button 
         @click="resetStoreToDefault"
@@ -209,7 +209,7 @@
           ? 'border-red-900/50 hover:bg-red-950/20 hover:border-red-500' 
           : 'border-red-200 bg-white text-red-600 hover:bg-red-50 hover:border-red-500'"
       >
-        Wipe Cache
+        {{ store.t('wipeCache') }}
       </button>
     </div>
   </div>
@@ -285,7 +285,7 @@ const saveApiUrl = () => {
 
 // Reset store
 const resetStoreToDefault = () => {
-  if (confirm('ARE YOU SURE YOU WANT TO CLEAR CACHE AND RESTORE ALL SAMPLES?')) {
+  if (confirm(store.t('confirmWipe'))) {
     localStorage.removeItem('sabali_products')
     store.initStore()
     window.location.reload()
