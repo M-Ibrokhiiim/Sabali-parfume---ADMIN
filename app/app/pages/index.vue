@@ -219,45 +219,47 @@
     </div>
 
     <!-- DELETE CONFIRMATION MODAL -->
-    <transition name="fade">
-      <div v-if="isDeleteOpen" class="fixed inset-0 z-[110] flex items-center justify-center select-none bg-black/85 backdrop-blur-sm px-6">
-        <div 
-          class="border p-6 md:p-8 max-w-sm w-full space-y-6 text-center transition-all duration-500"
-          :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
-        >
-          <div class="mx-auto w-12 h-12 text-red-500">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.3c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-            </svg>
-          </div>
-          
-          <div class="space-y-2">
-            <h4 class="text-base uppercase tracking-[0.2em] font-black">Confirm Deletion</h4>
-            <p class="text-xs font-light leading-relaxed" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-              Are you sure you want to permanently delete <strong :class="store.isDarkMode.value ? 'text-white' : 'text-black'">{{ productToDelete?.name }}</strong>? This action is irreversible.
-            </p>
-          </div>
+    <Teleport to="body">
+      <transition name="fade">
+        <div v-if="isDeleteOpen" class="fixed inset-0 z-[110] flex items-center justify-center select-none bg-black/85 backdrop-blur-sm px-6">
+          <div 
+            class="border p-6 md:p-8 max-w-sm w-full space-y-6 text-center transition-all duration-500"
+            :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
+          >
+            <div class="mx-auto w-12 h-12 text-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.3c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+              </svg>
+            </div>
+            
+            <div class="space-y-2">
+              <h4 class="text-base uppercase tracking-[0.2em] font-black">Confirm Deletion</h4>
+              <p class="text-xs font-light leading-relaxed" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
+                Are you sure you want to permanently delete <strong :class="store.isDarkMode.value ? 'text-white' : 'text-black'">{{ productToDelete?.name }}</strong>? This action is irreversible.
+              </p>
+            </div>
 
-          <div class="flex gap-3 pt-2">
-            <button 
-              @click="isDeleteOpen = false"
-              class="flex-1 py-3 border transition-all duration-300 text-xs uppercase tracking-[0.2em] font-bold"
-              :class="store.isDarkMode.value 
-                ? 'border-white/10 bg-zinc-900 text-white/80 hover:text-white hover:border-white' 
-                : 'border-black/10 bg-zinc-100 text-black/80 hover:text-black hover:border-black'"
-            >
-              Cancel
-            </button>
-            <button 
-              @click="submitDelete"
-              class="flex-1 py-3 bg-red-600 border border-red-600 text-white hover:bg-black hover:text-red-500 hover:border-red-500 transition-all duration-300 text-xs uppercase tracking-[0.2em] font-bold"
-            >
-              DELETE
-            </button>
+            <div class="flex gap-3 pt-2">
+              <button 
+                @click="isDeleteOpen = false"
+                class="flex-1 py-3 border transition-all duration-300 text-xs uppercase tracking-[0.2em] font-bold"
+                :class="store.isDarkMode.value 
+                  ? 'border-white/10 bg-zinc-900 text-white/80 hover:text-white hover:border-white' 
+                  : 'border-black/10 bg-zinc-100 text-black/80 hover:text-black hover:border-black'"
+              >
+                Cancel
+              </button>
+              <button 
+                @click="submitDelete"
+                class="flex-1 py-3 bg-red-600 border border-red-600 text-white hover:bg-black hover:text-red-500 hover:border-red-500 transition-all duration-300 text-xs uppercase tracking-[0.2em] font-bold"
+              >
+                DELETE
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
   </div>
 </template>
 

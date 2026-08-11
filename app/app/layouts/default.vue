@@ -1,14 +1,14 @@
 <template>
   <!-- Outer wrapper to center the app frame on all screens -->
   <div 
-    class="min-h-screen flex items-center justify-center p-2 sm:p-4 transition-colors  -mt-2 duration-500 w-full"
+    class="min-h-screen flex sm:items-center justify-center p-0 sm:p-4 transition-colors sm:-mt-2 duration-500 w-full"
     :class="store.isDarkMode.value ? 'bg-black' : 'bg-zinc-100'"
   >
     
     <!-- The Measured App Frame -->
     <div 
-      class="w-full max-w-[400px] min-w-[350px] h-[98vh]  flex flex-col font-sans select-none relative overflow-hidden transition-colors duration-500  shadow-2xl"
-      :class="store.isDarkMode.value ? 'bg-black text-white border-white' : 'bg-zinc-50 text-black border-black'"
+      class="w-full max-w-[400px] min-w-[350px] min-h-screen sm:min-h-0 sm:h-[98vh] flex flex-col font-sans select-none relative overflow-visible sm:overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
+      :class="store.isDarkMode.value ? 'bg-black text-white border-white/10' : 'bg-zinc-50 text-black border-black/10'"
     >
       
       <!-- Header -->
@@ -48,14 +48,14 @@
         </div>
       </header>
 
-      <!-- Main Content Area (Scrollable within the frame) -->
-      <main class="flex-1 w-full mx-auto px-4 py-6 overflow-y-auto pb-28 scrollbar-hide relative z-10">
+      <!-- Main Content Area (Scrollable naturally on mobile, within frame on desktop) -->
+      <main class="flex-1 w-full mx-auto px-4 py-6 overflow-y-visible sm:overflow-y-auto pb-28 scrollbar-hide relative z-10">
         <slot />
       </main>
 
-      <!-- Bottom Navigation Bar (Fixed at the bottom of the *FRAME*) -->
+      <!-- Bottom Navigation Bar (Fixed on mobile, absolute on desktop) -->
       <nav 
-        class="absolute bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl py-3 px-6 transition-all duration-500 w-full"
+        class="fixed sm:absolute bottom-0 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 z-50 border-t backdrop-blur-xl py-3 px-6 pb-[calc(12px+env(safe-area-inset-bottom))] sm:pb-3 transition-all duration-500 w-full max-w-[400px] sm:max-w-none"
         :class="store.isDarkMode.value ? 'bg-black/90 border-white/10' : 'bg-white/90 border-black/10'"
       >
       
