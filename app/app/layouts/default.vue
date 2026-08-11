@@ -13,7 +13,7 @@
       
       <!-- Header -->
       <header 
-        class="border-b sticky top-0 z-50 py-5 px-6  backdrop-blur-md transition-all duration-500 w-full"
+        class="border-b sticky top-0 z-50 py-5 px-6  shadow- shadow-amber-50 backdrop-blur-md transition-all duration-500 w-full"
         :class="store.isDarkMode.value ? 'border-white/10 bg-black/80' : 'border-black/10 bg-white/80'"
       >
         <div class="w-full mx-auto  flex items-center justify-between ">
@@ -180,9 +180,11 @@ const route = useRoute()
 const store = useStore()
 
 // Dynamically bind document body and html classes for dark/light mode
+// Also disable native browser translation suggestions since we have our own
 useHead({
   htmlAttrs: {
-    class: computed(() => store.isDarkMode.value ? 'bg-black transition-colors duration-500' : 'bg-zinc-100 transition-colors duration-500')
+    class: computed(() => store.isDarkMode.value ? 'bg-black transition-colors duration-500' : 'bg-zinc-100 transition-colors duration-500'),
+    translate: 'no'
   },
   bodyAttrs: {
     class: computed(() => store.isDarkMode.value ? 'bg-black text-white transition-colors duration-500' : 'bg-zinc-100 text-black transition-colors duration-500')
@@ -191,6 +193,10 @@ useHead({
     {
       name: 'theme-color',
       content: computed(() => store.isDarkMode.value ? '#000000' : '#f4f4f5')
+    },
+    {
+      name: 'google',
+      content: 'notranslate'
     }
   ]
 })
