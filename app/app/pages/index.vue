@@ -61,9 +61,9 @@
       <div 
         v-for="product in filteredProducts" 
         :key="product.id"
-        class="border p-5 transition-all duration-500 flex gap-4 md:gap-6 group relative"
+        class="border p-5 transition-all w-[93vw] -ml-2  rounded-xl duration-500 flex gap-4 md:gap-6 group relative"
         :class="store.isDarkMode.value 
-          ? 'bg-zinc-950 border-white/10 hover:border-white/30' 
+          ? 'bg-zinc-950 border-white/20 hover:border-white/30'
           : 'bg-white border-black/10 hover:border-black/30'"
       >
 
@@ -158,29 +158,9 @@
                 :class="store.isDarkMode.value 
                   ? 'text-white/30 border-white/5 bg-zinc-900/50' 
                   : 'text-black/40 border-black/5 bg-zinc-100/50'"
-              >{{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Uniseks') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Унисекс') }}</span>
+              >{{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Ayollar') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Женские') }}</span>
             </div>
 
-            <!-- Stock bar -->
-            <div class="flex items-center gap-2 max-w-xs">
-              <span 
-                class="text-[9px] uppercase tracking-[0.15em] font-bold min-w-[50px] transition-colors duration-500"
-                :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'"
-              >{{ store.t('stockLabel') }} {{ product.stock }}</span>
-              <div class="flex-1 h-1 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
-                <div 
-                  class="h-full rounded-full transition-all duration-500" 
-                  :class="[
-                    product.stock <= 3 
-                      ? 'bg-red-500' 
-                      : product.stock <= 10 
-                        ? 'bg-amber-500' 
-                        : (store.isDarkMode.value ? 'bg-white' : 'bg-black')
-                  ]"
-                  :style="{ width: `${Math.min((product.stock / 50) * 100, 100)}%` }"
-                ></div>
-              </div>
-            </div>
           </div>
 
           <!-- Bottom Row: Statistics & Brutalist Action Buttons -->

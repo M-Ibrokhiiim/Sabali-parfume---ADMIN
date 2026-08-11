@@ -13,8 +13,8 @@
       
       <!-- Header -->
       <header 
-        class="border-b sticky top-0 z-50 py-5 px-6  shadow- shadow-amber-50 backdrop-blur-md transition-all duration-500 w-full"
-        :class="store.isDarkMode.value ? 'border-white/10 bg-black/80' : 'border-black/10 bg-white/80'"
+        class="border-b sticky top-0 z-50 py-5 px-6  backdrop-blur-md transition-all duration-500 w-full"
+        :class="store.isDarkMode.value ? 'border-white/20 bg-black/80' : 'border-black/20 bg-white/80'"
       >
         <div class="w-full mx-auto  flex items-center justify-between ">
           <h1 
@@ -86,7 +86,7 @@
       <!-- Bottom Navigation Bar (Fixed on mobile, absolute on desktop) -->
       <nav 
         class="fixed sm:absolute bottom-0 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 z-50 border-t backdrop-blur-xl py-3 px-6 pb-[calc(12px+env(safe-area-inset-bottom))] sm:pb-3 transition-all duration-500 w-full max-w-[400px] sm:max-w-none"
-        :class="store.isDarkMode.value ? 'bg-black/90 border-white/10' : 'bg-white/90 border-black/10'"
+        :class="store.isDarkMode.value ? 'bg-black/90 border-white/20' : 'bg-white/90 border-black/20'"
       >
       
       <div class="w-full mx-auto gap-20 flex relative">
