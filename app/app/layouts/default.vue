@@ -93,7 +93,7 @@
           <!-- Products Tab -->
           <NuxtLink 
             to="/" 
-            class="flex flex-col items-center justify-center gap-1 group py-1 text-center flex-1 transition-all duration-300"
+            class="flex flex-col items-center justify-center gap-1 group py-1 -ml-3 text-center flex-1 transition-all duration-300"
             :class="[
               route.path === '/' 
                 ? (store.isDarkMode.value ? 'text-white scale-105' : 'text-black scale-105') 
