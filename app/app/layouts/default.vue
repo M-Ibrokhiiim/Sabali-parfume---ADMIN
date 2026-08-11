@@ -7,7 +7,7 @@
     
     <!-- The Measured App Frame -->
     <div 
-      class="w-full max-w-[400px] min-w-[350px] h-[100vh]  flex flex-col font-sans select-none relative overflow-hidden transition-colors duration-500  shadow-2xl"
+      class="w-full max-w-[400px] min-w-[350px] h-[98vh]  flex flex-col font-sans select-none relative overflow-hidden transition-colors duration-500  shadow-2xl"
       :class="store.isDarkMode.value ? 'bg-black text-white border-white' : 'bg-zinc-50 text-black border-black'"
     >
       
