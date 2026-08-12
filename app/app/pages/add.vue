@@ -227,7 +227,6 @@
           >
             <option value="Men">{{ store.t('catMen') }}</option>
             <option value="Women">{{ store.t('catWomen') }}</option>
-            <option value="Unisex">{{ store.t('catUnisex') }}</option>
           </select>
         </div>
 
@@ -302,7 +301,7 @@ const form = ref({
   brand: 'SABALI',
   price: null,
   stock: null,
-  category: 'Unisex',
+  category: 'Men',
   volume: '100ml',
   description: '',
   images: []

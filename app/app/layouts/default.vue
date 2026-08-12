@@ -1,13 +1,13 @@
 <template>
   <!-- Outer wrapper to center the app frame on all screens -->
   <div 
-    class="min-h-dvh flex sm:items-center justify-center p-0 sm:p-4 transition-colors sm:-mt-2 duration-500 w-full"
+    class="h-dvh w-full overflow-hidden flex sm:items-center justify-center p-0 sm:p-4 transition-colors duration-500"
     :class="store.isDarkMode.value ? 'bg-black' : 'bg-zinc-100'"
   >
     
     <!-- The Measured App Frame -->
     <div 
-      class="w-full max-w-[400px] min-w-[350px] h-dvh sm:h-[98vh] flex flex-col font-sans select-none relative overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
+      class="w-full max-w-[400px] min-w-[350px] h-dvh sm:h-[95vh] flex flex-col font-sans relative overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
       :class="store.isDarkMode.value ? 'bg-black text-white border-white/10' : 'bg-zinc-50 text-black border-black/10'"
     >
       
@@ -79,7 +79,7 @@
       </header>
 
       <!-- Main Content Area (Scrollable naturally on mobile, within frame on desktop) -->
-      <main class="flex-1 w-full mx-auto px-4 py-6 overflow-y-auto pb-28 scrollbar-hide relative z-10">
+      <main class="flex-1 min-h-0 w-full mx-auto px-4 py-6 overflow-y-auto pb-28 scrollbar-hide relative z-10">
         <slot />
       </main>
 
