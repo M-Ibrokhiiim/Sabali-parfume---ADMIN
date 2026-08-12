@@ -21,10 +21,10 @@
     >
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
+        class="w-30 h-30 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white/20 bg-black' : 'border-black/20 bg-zinc-100'"
       >
-        <img :src="ProfilePic" class="w-full h-full object-cover" />
+        <img :src="store.adminPic.value || ProfilePic" class="w-full h-full object-cover" />
       </div>
 
       <!-- User Name -->
@@ -32,26 +32,18 @@
         class="text-base uppercase tracking-[0.15em] font-extrabold transition-colors duration-500" 
         :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
       >
-        SabAli Admin
+        {{ store.adminName.value }}
       </h3>
-
-      <!-- Description / Role -->
-      <span 
-        class="text-[9px] uppercase tracking-[0.2em] font-black border px-3 py-1 transition-all duration-500"
-        :class="store.isDarkMode.value ? 'border-white bg-white text-black' : 'border-black bg-black text-white'"
+      <!-- Edit Button -->
+      <NuxtLink 
+        to="/profile-edit"
+        class="px-5 py-2 text-xs font-black uppercase tracking-[0.15em] border transition-all duration-300 rounded-none inline-block mt-2"
+        :class="store.isDarkMode.value 
+          ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
+          : 'bg-black text-white border-black hover:bg-white hover:text-black'"
       >
-        {{ store.t('owner') }}
-      </span>
-
-      <!-- Additional Information -->
-      <div class="space-y-1">
-        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">
-          {{ store.t('authorizedAccount') }}
-        </p>
-        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-          admin@sabali-parfums.com
-        </p>
-      </div>
+        {{ store.t('editProfile') }}
+      </NuxtLink>
     </div>
 
     <!-- CATEGORY DISTRIBUTION METRICS -->
