@@ -137,7 +137,7 @@
             </div>
 
             <!-- Price and volume tag -->
-             <span class="text-sm font-black tracking-wide" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">UZS: {{ product.price }}</span>
+             <span class="text-sm font-black tracking-wide" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">UZS: {{ product.price != null ? product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '' }}</span>
             <div class="flex items-center gap-3 mt-2">
               <span 
                 class="text-[10px] uppercase tracking-[0.15em] border px-2 py-0.5 transition-all duration-500"

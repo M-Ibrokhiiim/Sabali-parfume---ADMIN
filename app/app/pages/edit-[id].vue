@@ -23,7 +23,7 @@
           : 'border-black/10 hover:border-black text-black/50 hover:text-black'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m6 18 18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -164,63 +164,31 @@
         />
       </div>
 
-      <!-- Double Grid: Price and Stock -->
+      <!-- Double Grid: Price and Volume -->
       <div class="grid grid-cols-2 gap-4">
         <!-- Price -->
-        <div class="space-y-2">
+        <div class="space-y-2 relative">
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
           >{{ store.t('labelPrice') }}</label>
           <input 
-            v-model.number="form.price"
-            type="number" 
-            min="1"
+            :value="formattedPrice"
+            @input="handlePriceInput"
+            type="text" 
+            inputmode="numeric"
             required
+            placeholder="100 000"
             class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
               : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
           />
-        </div>
-
-        <!-- Stock -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('editStock') }}</label>
-          <input 
-            v-model.number="form.stock"
-            type="number" 
-            min="0"
-            required
-            class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
-              : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
-          />
-        </div>
-      </div>
-
-      <!-- Double Grid: Category and Volume -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Category -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('labelCategory') }}</label>
-          <select 
-            v-model="form.category"
-            class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
-              : 'bg-white border-black/10 focus:border-black text-black'"
-          >
-            <option value="Men">{{ store.t('catMen') }}</option>
-            <option value="Women">{{ store.t('catWomen') }}</option>
-          </select>
+          <transition name="fade">
+            <span v-if="priceError" class="absolute -bottom-4 left-0 text-[8px] text-red-500 font-bold uppercase tracking-wider whitespace-nowrap">
+              {{ store.locale.value === 'uz' ? "Narx 10 000 000 dan kam bo'lishi kerak" : "Цена должна быть меньше 10 000 000" }}
+            </span>
+          </transition>
         </div>
 
         <!-- Volume -->
@@ -241,6 +209,24 @@
             <option value="150ml">150ml</option>
           </select>
         </div>
+      </div>
+
+      <!-- Category (Full width) -->
+      <div class="space-y-2">
+        <label 
+          class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
+          :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
+        >{{ store.t('labelCategory') }}</label>
+        <select 
+          v-model="form.category"
+          class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+          :class="store.isDarkMode.value 
+            ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
+            : 'bg-white border-black/10 focus:border-black text-black'"
+        >
+          <option value="Men">{{ store.t('catMen') }}</option>
+          <option value="Women">{{ store.t('catWomen') }}</option>
+        </select>
       </div>
 
       <!-- Description -->
@@ -276,7 +262,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 
@@ -288,6 +274,10 @@ const { products, updateProduct, loading } = store
 const form = ref(null)
 const isDragging = ref(false)
 const fileInput = ref(null)
+
+const priceError = ref(false)
+let priceClearTimeout = null
+let priceAlertTimeout = null
 
 onMounted(() => {
   // Find the product by ID in the store
@@ -303,6 +293,46 @@ onMounted(() => {
     }
   }
 })
+
+const formattedPrice = computed(() => {
+  if (!form.value || form.value.price == null) return ''
+  return form.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+})
+
+const handlePriceInput = (e) => {
+  let val = e.target.value.replace(/\s/g, '')
+  val = val.replace(/^0+(?=\d)/, '')
+  
+  let numericVal = parseInt(val, 10)
+  if (isNaN(numericVal)) {
+    form.value.price = null
+    priceError.value = false
+    e.target.value = ''
+  } else {
+    if (numericVal > 10000000) {
+      form.value.price = numericVal
+      priceError.value = true
+      e.target.value = numericVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      
+      clearTimeout(priceClearTimeout)
+      priceClearTimeout = setTimeout(() => {
+        if (form.value) form.value.price = null
+      }, 2000)
+      
+      clearTimeout(priceAlertTimeout)
+      priceAlertTimeout = setTimeout(() => {
+        priceError.value = false
+      }, 4000)
+    } else {
+      form.value.price = numericVal
+      priceError.value = false
+      clearTimeout(priceClearTimeout)
+      clearTimeout(priceAlertTimeout)
+      
+      e.target.value = numericVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    }
+  }
+}
 
 // Triggering native click
 const triggerFileInput = () => {
