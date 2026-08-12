@@ -16,27 +16,42 @@
 
     <!-- Admin Profile Card -->
     <div 
-      class="border p-6 flex items-center gap-4 md:gap-6 transition-all duration-500"
+      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all duration-500"
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10'"
     >
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-22 h-22 rounded-[100%] overflow-hidden  md:w-20 md:h-20 border flex items-center justify-center font-black text-xl tracking-[0.1em] transition-all duration-500"
-        :class="store.isDarkMode.value ? 'border-white/20 bg-black text-white' : 'border-black/20 bg-zinc-100 text-black'"
+        class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
+        :class="store.isDarkMode.value ? 'border-white/20 bg-black' : 'border-black/20 bg-zinc-100'"
       >
-        <img :src="ProfilePic" />
+        <img :src="ProfilePic" class="w-full h-full object-cover" />
       </div>
-      <div class="space-y-1 flex-1 min-w-0">
-        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('authorizedAccount') }}</p>
-        <h3 class="text-base uppercase tracking-[0.15em] font-extrabold truncate" :class="store.isDarkMode.value ? 'text-white' : 'text-black'"></h3>
-        <p class="text-xs font-light truncate" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">admin@sabali-parfums.com</p>
-      </div>
+
+      <!-- User Name -->
+      <h3 
+        class="text-base uppercase tracking-[0.15em] font-extrabold transition-colors duration-500" 
+        :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
+      >
+        SabAli Admin
+      </h3>
+
+      <!-- Description / Role -->
       <span 
-        class="text-[9px] uppercase tracking-[0.2em] font-black border px-3 py-1 self-start transition-all duration-500"
+        class="text-[9px] uppercase tracking-[0.2em] font-black border px-3 py-1 transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white bg-white text-black' : 'border-black bg-black text-white'"
       >
         {{ store.t('owner') }}
       </span>
+
+      <!-- Additional Information -->
+      <div class="space-y-1">
+        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">
+          {{ store.t('authorizedAccount') }}
+        </p>
+        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
+          admin@sabali-parfums.com
+        </p>
+      </div>
     </div>
 
     <!-- CATEGORY DISTRIBUTION METRICS -->
