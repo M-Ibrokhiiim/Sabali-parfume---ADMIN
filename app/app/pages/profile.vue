@@ -21,14 +21,14 @@
     >
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-16 h-16 md:w-20 md:h-20 border flex items-center justify-center font-black text-xl tracking-[0.1em] transition-all duration-500"
+        class="w-22 h-22 rounded-[100%] overflow-hidden  md:w-20 md:h-20 border flex items-center justify-center font-black text-xl tracking-[0.1em] transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white/20 bg-black text-white' : 'border-black/20 bg-zinc-100 text-black'"
       >
-        SB
+        <img :src=ProfilePic />
       </div>
       <div class="space-y-1 flex-1 min-w-0">
         <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('authorizedAccount') }}</p>
-        <h3 class="text-base uppercase tracking-[0.15em] font-extrabold truncate" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">SABALI SELLER</h3>
+        <h3 class="text-base uppercase tracking-[0.15em] font-extrabold truncate" :class="store.isDarkMode.value ? 'text-white' : 'text-black'"></h3>
         <p class="text-xs font-light truncate" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">admin@sabali-parfums.com</p>
       </div>
       <span 
@@ -208,6 +208,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useStore } from '~/composables/useStore'
+import ProfilePic from "../assets/pic/AccountPic.png"
 
 const store = useStore()
 const { products, updateApiBaseUrl } = store
