@@ -23,7 +23,7 @@
           : 'border-black/10 hover:border-black text-black/50 hover:text-black'"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m6 18 18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -164,7 +164,7 @@
         />
       </div>
 
-      <!-- Double Grid: Price and Stock -->
+      <!-- Double Grid: Price and Volume -->
       <div class="grid grid-cols-2 gap-4">
         <!-- Price -->
         <div class="space-y-2">
@@ -182,45 +182,6 @@
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
               : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
           />
-        </div>
-
-        <!-- Stock -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('editStock') }}</label>
-          <input 
-            v-model.number="form.stock"
-            type="number" 
-            min="0"
-            required
-            class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
-              : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
-          />
-        </div>
-      </div>
-
-      <!-- Double Grid: Category and Volume -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Category -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('labelCategory') }}</label>
-          <select 
-            v-model="form.category"
-            class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
-              : 'bg-white border-black/10 focus:border-black text-black'"
-          >
-            <option value="Men">{{ store.t('catMen') }}</option>
-            <option value="Women">{{ store.t('catWomen') }}</option>
-          </select>
         </div>
 
         <!-- Volume -->
@@ -241,6 +202,24 @@
             <option value="150ml">150ml</option>
           </select>
         </div>
+      </div>
+
+      <!-- Category (Full width) -->
+      <div class="space-y-2">
+        <label 
+          class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
+          :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
+        >{{ store.t('labelCategory') }}</label>
+        <select 
+          v-model="form.category"
+          class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+          :class="store.isDarkMode.value 
+            ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
+            : 'bg-white border-black/10 focus:border-black text-black'"
+        >
+          <option value="Men">{{ store.t('catMen') }}</option>
+          <option value="Women">{{ store.t('catWomen') }}</option>
+        </select>
       </div>
 
       <!-- Description -->

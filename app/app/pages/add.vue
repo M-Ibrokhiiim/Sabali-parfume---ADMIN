@@ -170,7 +170,7 @@
         />
       </div>
 
-      <!-- Double Grid: Price and Stock -->
+      <!-- Double Grid: Price and Volume -->
       <div class="grid grid-cols-2 gap-4">
         <!-- Price -->
         <div class="space-y-2">
@@ -191,46 +191,6 @@
           />
         </div>
 
-        <!-- Stock -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('labelStock') }}</label>
-          <input 
-            v-model.number="form.stock"
-            type="number" 
-            min="0"
-            required
-            placeholder="25"
-            class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
-              : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
-          />
-        </div>
-      </div>
-
-      <!-- Double Grid: Category and Volume -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Category -->
-        <div class="space-y-2">
-          <label 
-            class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
-            :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
-          >{{ store.t('labelCategory') }}</label>
-          <select 
-            v-model="form.category"
-            class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
-            :class="store.isDarkMode.value 
-              ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
-              : 'bg-white border-black/10 focus:border-black text-black'"
-          >
-            <option value="Men">{{ store.t('catMen') }}</option>
-            <option value="Women">{{ store.t('catWomen') }}</option>
-          </select>
-        </div>
-
         <!-- Volume -->
         <div class="space-y-2">
           <label 
@@ -249,6 +209,24 @@
             <option value="150ml">150ml</option>
           </select>
         </div>
+      </div>
+
+      <!-- Category (Full width) -->
+      <div class="space-y-2">
+        <label 
+          class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
+          :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
+        >{{ store.t('labelCategory') }}</label>
+        <select 
+          v-model="form.category"
+          class="w-full border px-4 py-3 text-base uppercase tracking-[0.15em] focus:outline-none transition-all duration-500 rounded-none"
+          :class="store.isDarkMode.value 
+            ? 'bg-zinc-950 border-white/10 focus:border-white text-white' 
+            : 'bg-white border-black/10 focus:border-black text-black'"
+        >
+          <option value="Men">{{ store.t('catMen') }}</option>
+          <option value="Women">{{ store.t('catWomen') }}</option>
+        </select>
       </div>
 
       <!-- Description -->
@@ -301,7 +279,6 @@ const form = ref({
   name: '',
   brand: 'SABALI',
   price: null,
-  stock: null,
   category: 'Men',
   volume: '100ml',
   description: '',
