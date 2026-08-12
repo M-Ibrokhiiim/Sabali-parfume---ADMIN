@@ -18,7 +18,7 @@
       >
         <div class="w-full mx-auto  flex items-center justify-between ">
           <h1 
-            class="logo text-xl tracking-[8px] ml-[-10px]  font-black uppercase transition-colors duration-500"
+            class="logo text-2xl tracking-[8px] ml-[-10px]  font-black uppercase transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
           >
             SABALI
@@ -208,10 +208,20 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montenegrin+Gothic+One&display=swap'); */
+
+/* @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&display=swap');
+
+
+
 
 .logo {
-  font-family: 'Space Grotesk', sans-serif;
-  letter-spacing: 0.35em;
+  font-family: "Rowdies", sans-serif;
+  font-weight: 300;
+  font-style: normal;
 }
 </style>
