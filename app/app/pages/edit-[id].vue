@@ -167,13 +167,14 @@
       <!-- Double Grid: Price and Volume -->
       <div class="grid grid-cols-2 gap-4">
         <!-- Price -->
-        <div class="space-y-2">
+        <div class="space-y-2 relative">
           <label 
             class="block text-[10px] uppercase tracking-[0.25em] font-bold transition-colors duration-500"
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
           >{{ store.t('labelPrice') }}</label>
           <input 
-            v-model="formattedPrice"
+            :value="formattedPrice"
+            @input="handlePriceInput"
             type="text" 
             inputmode="numeric"
             required
@@ -183,6 +184,11 @@
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
               : 'bg-white border-black/10 placeholder-black/20 focus:border-black text-black'"
           />
+          <transition name="fade">
+            <span v-if="priceError" class="absolute -bottom-4 left-0 text-[8px] text-red-500 font-bold uppercase tracking-wider whitespace-nowrap">
+              {{ store.locale.value === 'uz' ? "Narx 10 000 000 dan kam bo'lishi kerak" : "Цена должна быть меньше 10 000 000" }}
+            </span>
+          </transition>
         </div>
 
         <!-- Volume -->
@@ -269,6 +275,10 @@ const form = ref(null)
 const isDragging = ref(false)
 const fileInput = ref(null)
 
+const priceError = ref(false)
+let priceClearTimeout = null
+let priceAlertTimeout = null
+
 onMounted(() => {
   // Find the product by ID in the store
   const targetId = route.params.id
@@ -284,17 +294,45 @@ onMounted(() => {
   }
 })
 
-const formattedPrice = computed({
-  get: () => {
-    if (!form.value || form.value.price == null) return ''
-    return form.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-  },
-  set: (val) => {
-    if (!form.value) return
-    const numericVal = parseInt(val.replace(/\s/g, ''), 10)
-    form.value.price = isNaN(numericVal) ? null : numericVal
-  }
+const formattedPrice = computed(() => {
+  if (!form.value || form.value.price == null) return ''
+  return form.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 })
+
+const handlePriceInput = (e) => {
+  let val = e.target.value.replace(/\s/g, '')
+  val = val.replace(/^0+(?=\d)/, '')
+  
+  let numericVal = parseInt(val, 10)
+  if (isNaN(numericVal)) {
+    form.value.price = null
+    priceError.value = false
+    e.target.value = ''
+  } else {
+    if (numericVal > 10000000) {
+      form.value.price = numericVal
+      priceError.value = true
+      e.target.value = numericVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      
+      clearTimeout(priceClearTimeout)
+      priceClearTimeout = setTimeout(() => {
+        if (form.value) form.value.price = null
+      }, 2000)
+      
+      clearTimeout(priceAlertTimeout)
+      priceAlertTimeout = setTimeout(() => {
+        priceError.value = false
+      }, 4000)
+    } else {
+      form.value.price = numericVal
+      priceError.value = false
+      clearTimeout(priceClearTimeout)
+      clearTimeout(priceAlertTimeout)
+      
+      e.target.value = numericVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    }
+  }
+}
 
 // Triggering native click
 const triggerFileInput = () => {
