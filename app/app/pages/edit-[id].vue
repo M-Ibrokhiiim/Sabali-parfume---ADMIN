@@ -83,6 +83,7 @@
 
             <!-- Add more images box -->
             <div 
+              v-if="form.images.length < 3"
               @click="triggerFileInput"
               class="relative w-32 h-44 flex-shrink-0 snap-center border border-dashed flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105"
               :class="store.isDarkMode.value ? 'border-white/20 hover:border-white text-white/50 hover:text-white bg-zinc-900/50' : 'border-black/20 hover:border-black text-black/50 hover:text-black bg-zinc-100/50'"
@@ -305,16 +306,27 @@ onMounted(() => {
 
 // Triggering native click
 const triggerFileInput = () => {
+  if (form.value?.images?.length >= 3) return
   fileInput.value?.click()
 }
 
 // Convert files to Base64 arrays
 const processFiles = (files) => {
-  Array.from(files).forEach(file => {
-    if (!file || !file.type.startsWith('image/')) return
+  if (!form.value || !form.value.images) return
+  
+  const currentCount = form.value.images.length
+  if (currentCount >= 3) return
+  
+  const remainingSlots = 3 - currentCount
+  const validImageFiles = Array.from(files).filter(file => file && file.type.startsWith('image/'))
+  const filesToProcess = validImageFiles.slice(0, remainingSlots)
+  
+  filesToProcess.forEach(file => {
     const reader = new FileReader()
     reader.onload = (e) => {
-      form.value.images.push(e.target?.result)
+      if (form.value.images.length < 3) {
+        form.value.images.push(e.target?.result)
+      }
     }
     reader.readAsDataURL(file)
   })
@@ -329,6 +341,7 @@ const handleFileChange = (e) => {
 
 const handleDrop = (e) => {
   isDragging.value = false
+  if (form.value?.images?.length >= 3) return
   const files = e.dataTransfer?.files
   if (files) processFiles(files)
 }
