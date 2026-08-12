@@ -208,12 +208,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=Montenegrin+Gothic+One&display=swap'); */
-
-/* @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap'); */
-
 @import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&display=swap');
 
 
