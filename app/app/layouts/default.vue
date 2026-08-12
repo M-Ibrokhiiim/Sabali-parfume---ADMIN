@@ -7,8 +7,8 @@
     
     <!-- The Measured App Frame -->
     <div 
-      class="w-full max-w-[400px] min-w-[350px] min-h-dvh sm:min-h-0 sm:h-[98vh] flex flex-col font-sans select-none relative overflow-x-hidden overflow-y-visible sm:overflow-hidden transition-colors duration-500 shadow-2xl sm:rounded-2xl sm:border"
-      :class="store.isDarkMode.value ? 'bg-black text-white border-white/10' : 'bg-zinc-50 text-black border-black/10'"
+      class="w-full max-w-[400px] min-w-[350px] h-[98vh]  flex flex-col font-sans select-none relative overflow-hidden transition-colors duration-500  shadow-2xl"
+      :class="store.isDarkMode.value ? 'bg-black text-white border-white' : 'bg-zinc-50 text-black border-black'"
     >
       
       <!-- Header -->
