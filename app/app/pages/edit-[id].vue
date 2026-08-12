@@ -173,10 +173,11 @@
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
           >{{ store.t('labelPrice') }}</label>
           <input 
-            v-model.number="form.price"
-            type="number" 
-            min="1"
+            v-model="formattedPrice"
+            type="text" 
+            inputmode="numeric"
             required
+            placeholder="100 000"
             class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -255,7 +256,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 
@@ -280,6 +281,18 @@ onMounted(() => {
     if (form.value.category === 'Unisex') {
       form.value.category = 'Men'
     }
+  }
+})
+
+const formattedPrice = computed({
+  get: () => {
+    if (!form.value || form.value.price == null) return ''
+    return form.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  },
+  set: (val) => {
+    if (!form.value) return
+    const numericVal = parseInt(val.replace(/\s/g, ''), 10)
+    form.value.price = isNaN(numericVal) ? null : numericVal
   }
 })
 

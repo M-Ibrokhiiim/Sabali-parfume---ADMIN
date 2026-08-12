@@ -179,11 +179,11 @@
             :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'"
           >{{ store.t('labelPrice') }}</label>
           <input 
-            v-model.number="form.price"
-            type="number" 
-            min="1"
+            v-model="formattedPrice"
+            type="text" 
+            inputmode="numeric"
             required
-            placeholder="140"
+            placeholder="100 000"
             class="w-full border px-4 py-3 text-base tracking-wider focus:outline-none transition-all duration-500 rounded-none"
             :class="store.isDarkMode.value 
               ? 'bg-zinc-950 border-white/10 placeholder-white/15 focus:border-white text-white' 
@@ -263,7 +263,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 
@@ -283,6 +283,17 @@ const form = ref({
   volume: '100ml',
   description: '',
   images: []
+})
+
+const formattedPrice = computed({
+  get: () => {
+    if (form.value.price == null) return ''
+    return form.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  },
+  set: (val) => {
+    const numericVal = parseInt(val.replace(/\s/g, ''), 10)
+    form.value.price = isNaN(numericVal) ? null : numericVal
+  }
 })
 
 // Triggering native click
