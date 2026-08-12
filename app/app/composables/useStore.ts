@@ -23,7 +23,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     brand: 'SABALI',
     price: 165,
     volume: '100ml',
-    category: 'Unisex',
+    category: 'Men',
     stock: 14,
     description: 'An intense, dark wood perfume featuring deep notes of agarwood, sandalwood, and rich incense.',
     images: [],
@@ -65,7 +65,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     brand: 'SABALI',
     price: 155,
     volume: '100ml',
-    category: 'Unisex',
+    category: 'Men',
     stock: 22,
     description: 'Pristine high-altitude cedar, crisp ozone, fresh pine needle, and cold leather.',
     images: [],
@@ -75,15 +75,202 @@ const DEFAULT_PRODUCTS: Product[] = [
   }
 ]
 
+// Translations Dictionary
+const TRANSLATIONS = {
+  uz: {
+    // Nav
+    navProducts: 'Mahsulotlar',
+    navProfile: 'Profil',
+    
+    // Index
+    tabAll: 'BARCHASI',
+    tabMen: 'ERKAKLAR',
+    tabWomen: 'AYOLLAR',
+    syncingDb: 'Ma\'lumotlar bazasi sinxronlanmoqda...',
+    noProductsFound: 'Mahsulotlar topilmadi',
+    tryAdjusting: 'Filtrlarni yoki qidiruv mezonlarini o\'zgartirib ko\'ring.',
+    createProduct: 'Mahsulot yaratish',
+    stockLabel: 'Zahira:',
+    salesLabel: 'Sotuv:',
+    btnEdit: 'Tahrirlash',
+    btnDelete: 'O\'chirish',
+    confirmDeletionTitle: 'O\'chirishni tasdiqlang',
+    confirmDeletionText1: 'Haqiqatan ham ',
+    confirmDeletionText2: ' ni butunlay o\'chirib tashlamoqchimisiz? Bu harakatni bekor qilib bo\'lmaydi.',
+    btnCancel: 'Bekor qilish',
+    btnDeleteUpper: 'O\'CHIRISH',
+
+    // Add / Edit
+    titleCreateNew: 'Yangi yaratish',
+    titleProduct: 'Mahsulot',
+    titleEdit: 'Tahrirlash',
+    productImages: 'MAHSULOT RASMLARI',
+    selected: 'TANLANDI',
+    addMore: 'YANA QO\'SHISH',
+    dragDropTitle: 'RASMLARNI TORTIB KELING',
+    dragDropDesc: 'Mahalliy fayllarni tanlang (JPG, PNG)',
+    productDetails: 'MAHSULOT TAFSILOTLARI',
+    labelName: 'Nomi',
+    placeholderName: 'masalan, OUD NOIR',
+    labelBrand: 'Brend',
+    placeholderBrand: 'masalan, SABALI',
+    labelDesc: 'Tavsifi',
+    placeholderDesc: 'Mahsulot haqida batafsil ma\'lumot...',
+    specifications: 'XUSUSIYATLARI',
+    labelPrice: 'Narxi ($)',
+    labelVolume: 'Hajmi',
+    placeholderVolume: 'masalan, 100ml',
+    labelCategory: 'Toifasi',
+    selectCategory: 'Toifani tanlang',
+    catMen: 'Erkaklar',
+    catWomen: 'Ayollar',
+    labelStock: 'Boshlang\'ich zahira',
+    editStock: 'Zahira',
+    btnPublish: 'MAHSULOTNI NASHR QILISH',
+    btnSaving: 'Saqlanmoqda...',
+    btnSaveChanges: 'O\'ZGARISHLARNI SAQLASH',
+    productNotFound: 'Mahsulot topilmadi',
+    returnToProducts: 'Mahsulotlarga qaytish',
+    creationSuccessful: 'MUVAFFAQIYATLI YARATILDI',
+    integratedInventory: 'Atir SABALI inventariga qo\'shildi.',
+
+    // Profile (already present)
+    storeInsights: 'Do\'kon tahlillari',
+    profileStats: 'Profil va statistika',
+    authorizedAccount: 'Ruxsat etilgan hisob',
+    owner: 'EGA',
+    totalStyles: 'JAMI USLUBLAR',
+    activePerfumes: 'Faol atir modellari',
+    stockUnits: 'ZAHIRA BIRLIKLARI',
+    availableWarehouse: 'Omborda mavjud',
+    depletedStock: 'TUGAGAN ZAHIRA',
+    zeroStock: 'Zahirasi tugagan atirlar',
+    estRevenue: 'TUSHUM (TAXMINIY)',
+    basedOnSales: 'Qayd etilgan sotuvlar asosida',
+    categoryDistribution: 'Toifalar taqsimoti',
+    menPerfumes: 'ERKAKLAR ATIRLARI',
+    womenPerfumes: 'AYOLLAR ATIRLARI',
+    unisexPerfumes: 'UNISEKS ATIRLAR',
+    styles: 'uslub',
+    backendConnection: 'NestJS Backend ulanishi',
+    backendDesc: 'Ushbu boshqaruv panelini to\'g\'ridan-to\'g\'ri ishlayotgan NestJS backend dasturiga ulang. Ma\'lumotlar darhol REST API bilan sinxronlanadi.',
+    backendUrl: 'NESTJS ASOSIY URL',
+    connect: 'Ulanish',
+    targetEndpoint: 'Maqsadli nuqta:',
+    syncProtocol: 'Sinxronlash protokoli:',
+    activeHybrid: 'FAOL GIBRID',
+    dbCacheReset: 'Ma\'lumotlar ombori keshini tozalash',
+    dbCacheDesc: 'Standart namunalarni tiklash va LocalStorage-ni tozalash',
+    wipeCache: 'Keshni tozalash',
+    confirmWipe: 'KESHNI TOZALASH VA BARCHA NAMUNALARNI TIKLASHNI HOHLAYSIZMI?'
+  },
+  ru: {
+    // Nav
+    navProducts: 'Продукты',
+    navProfile: 'Профиль',
+
+    // Index
+    tabAll: 'ВСЕ',
+    tabMen: 'МУЖСКИЕ',
+    tabWomen: 'ЖЕНСКИЕ',
+    syncingDb: 'Синхронизация базы данных...',
+    noProductsFound: 'Продукты не найдены',
+    tryAdjusting: 'Попробуйте изменить фильтры или критерии поиска.',
+    createProduct: 'Создать продукт',
+    stockLabel: 'В наличии:',
+    salesLabel: 'Продажи:',
+    btnEdit: 'Изменить',
+    btnDelete: 'Удалить',
+    confirmDeletionTitle: 'Подтвердить удаление',
+    confirmDeletionText1: 'Вы уверены, что хотите навсегда удалить ',
+    confirmDeletionText2: '? Это действие необратимо.',
+    btnCancel: 'Отмена',
+    btnDeleteUpper: 'УДАЛИТЬ',
+
+    // Add / Edit
+    titleCreateNew: 'Создать новый',
+    titleProduct: 'Продукт',
+    titleEdit: 'Редактировать',
+    productImages: 'ИЗОБРАЖЕНИЯ ПРОДУКТА',
+    selected: 'ВЫБРАНО',
+    addMore: 'ДОБАВИТЬ ЕЩЕ',
+    dragDropTitle: 'ПЕРЕТАЩИТЕ ИЗОБРАЖЕНИЯ',
+    dragDropDesc: 'Выберите локальные файлы (JPG, PNG)',
+    productDetails: 'ДЕТАЛИ ПРОДУКТА',
+    labelName: 'Название',
+    placeholderName: 'например, OUD NOIR',
+    labelBrand: 'Бренд',
+    placeholderBrand: 'например, SABALI',
+    labelDesc: 'Описание',
+    placeholderDesc: 'Подробное описание продукта...',
+    specifications: 'ХАРАКТЕРИСТИКИ',
+    labelPrice: 'Цена ($)',
+    labelVolume: 'Объем',
+    placeholderVolume: 'например, 100ml',
+    labelCategory: 'Категория',
+    selectCategory: 'Выберите категорию',
+    catMen: 'Мужские',
+    catWomen: 'Женские',
+    catUnisex: 'Унисекс',
+    labelStock: 'Начальный запас',
+    editStock: 'Запас',
+    btnPublish: 'ОПУБЛИКОВАТЬ ПРОДУКТ',
+    btnSaving: 'Сохранение...',
+    btnSaveChanges: 'СОХРАНИТЬ ИЗМЕНЕНИЯ',
+    productNotFound: 'Продукт не найден',
+    returnToProducts: 'Вернуться к продуктам',
+    creationSuccessful: 'УСПЕШНО СОЗДАНО',
+    integratedInventory: 'Парфюм добавлен в инвентарь SABALI.',
+
+    // Profile (already present)
+    storeInsights: 'Аналитика магазина',
+    profileStats: 'Профиль и статистика',
+    authorizedAccount: 'Авторизованный аккаунт',
+    owner: 'ВЛАДЕЛЕЦ',
+    totalStyles: 'ВСЕГО СТИЛЕЙ',
+    activePerfumes: 'Активные модели парфюма',
+    stockUnits: 'ЕДИНИЦЫ НА СКЛАДЕ',
+    availableWarehouse: 'Доступно на складе',
+    depletedStock: 'ИСТОЩЕННЫЙ ЗАПАС',
+    zeroStock: 'Парфюмы с нулевым запасом',
+    estRevenue: 'ПРИБЫЛЬ (ОЦЕНКА)',
+    basedOnSales: 'На основе зарегистрированных продаж',
+    categoryDistribution: 'Распределение по категориям',
+    menPerfumes: 'МУЖСКИЕ ПАРФЮМЫ',
+    womenPerfumes: 'ЖЕНСКИЕ ПАРФЮМЫ',
+    unisexPerfumes: 'УНИСЕКС ПАРФЮМЫ',
+    styles: 'стилей',
+    backendConnection: 'Подключение NestJS Backend',
+    backendDesc: 'Привяжите эту панель напрямую к вашему работающему NestJS backend. Данные будут мгновенно синхронизироваться с REST API.',
+    backendUrl: 'БАЗОВЫЙ URL NESTJS',
+    connect: 'Подключить',
+    targetEndpoint: 'Целевая точка:',
+    syncProtocol: 'Протокол синхр.:',
+    activeHybrid: 'АКТИВНЫЙ ГИБРИД',
+    dbCacheReset: 'Сброс кэша базы данных',
+    dbCacheDesc: 'Восстановить макеты и очистить LocalStorage',
+    wipeCache: 'Очистить кэш',
+    confirmWipe: 'ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ ОЧИСТИТЬ КЭШ И ВОССТАНОВИТЬ ВСЕ МАКЕТЫ?'
+  }
+}
+
 export const useStore = () => {
   const products = useState<Product[]>('sabali-products', () => [])
   const loading = useState<boolean>('sabali-loading', () => false)
   const error = useState<string | null>('sabali-error', () => null)
   const apiBaseUrl = useState<string>('sabali-api-url', () => 'http://localhost:3000')
   const isDarkMode = useState<boolean>('sabali-dark-mode', () => true)
+  
+  // Localization state
+  const locale = useState<'uz' | 'ru'>('sabali-locale', () => 'uz')
 
   // Check if we are running in the browser
   const isBrowser = typeof window !== 'undefined'
+
+  // Translation helper
+  const t = (key: keyof typeof TRANSLATIONS['uz']): string => {
+    return TRANSLATIONS[locale.value][key] || key
+  }
 
   // Initialize store from localStorage on client-side
   const initStore = () => {
@@ -95,6 +282,12 @@ export const useStore = () => {
       isDarkMode.value = savedTheme === 'dark'
     } else {
       isDarkMode.value = true
+    }
+
+    // Load language
+    const savedLocale = localStorage.getItem('sabali_locale')
+    if (savedLocale === 'uz' || savedLocale === 'ru') {
+      locale.value = savedLocale
     }
 
     // Load API URL
@@ -287,6 +480,13 @@ export const useStore = () => {
       localStorage.setItem('sabali_theme', isDarkMode.value ? 'dark' : 'light')
     }
   }
+  
+  const setLocale = (newLocale: 'uz' | 'ru') => {
+    locale.value = newLocale
+    if (isBrowser) {
+      localStorage.setItem('sabali_locale', newLocale)
+    }
+  }
 
   return {
     products,
@@ -294,12 +494,15 @@ export const useStore = () => {
     error,
     apiBaseUrl,
     isDarkMode,
+    locale,
+    t,
     initStore,
     fetchProducts,
     addProduct,
     updateProduct,
     deleteProduct,
     updateApiBaseUrl,
-    toggleTheme
+    toggleTheme,
+    setLocale
   }
 }
