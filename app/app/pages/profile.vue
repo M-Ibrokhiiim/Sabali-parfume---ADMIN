@@ -123,16 +123,6 @@
           </div>
         </div>
 
-        <!-- Unisex Bar -->
-        <div class="space-y-1">
-          <div class="flex justify-between text-[10px] uppercase tracking-[0.15em]" :class="store.isDarkMode.value ? 'text-white/70' : 'text-black/70'">
-            <span>{{ store.t('unisexPerfumes') }}</span>
-            <span class="font-bold">{{ unisexPercentage }}% ({{ categoryCounts.Unisex }} {{ store.t('styles') }})</span>
-          </div>
-          <div class="h-1.5 rounded-full overflow-hidden transition-colors duration-500" :class="store.isDarkMode.value ? 'bg-zinc-900' : 'bg-zinc-200'">
-            <div class="h-full transition-all duration-700" :class="store.isDarkMode.value ? 'bg-white' : 'bg-black'" :style="{ width: `${unisexPercentage}%` }"></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -245,7 +235,7 @@ const estimatedRevenue = computed(() => {
 
 // Category distribution
 const categoryCounts = computed(() => {
-  const counts = { Men: 0, Women: 0, Unisex: 0 }
+  const counts = { Men: 0, Women: 0 }
   products.value.forEach(p => {
     if (counts[p.category] !== undefined) {
       counts[p.category]++
@@ -262,11 +252,6 @@ const menPercentage = computed(() => {
 const womenPercentage = computed(() => {
   if (productsCount.value === 0) return 0
   return Math.round((categoryCounts.value.Women / productsCount.value) * 100)
-})
-
-const unisexPercentage = computed(() => {
-  if (productsCount.value === 0) return 0
-  return Math.round((categoryCounts.value.Unisex / productsCount.value) * 100)
 })
 
 // Save API url

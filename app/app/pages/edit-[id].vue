@@ -219,7 +219,6 @@
           >
             <option value="Men">{{ store.t('catMen') }}</option>
             <option value="Women">{{ store.t('catWomen') }}</option>
-            <option value="Unisex">{{ store.t('catUnisex') }}</option>
           </select>
         </div>
 
@@ -297,6 +296,10 @@ onMounted(() => {
   if (targetProduct) {
     // Populate form clone, ensuring images is an array
     form.value = { ...targetProduct, images: targetProduct.images ? [...targetProduct.images] : [] }
+    // Enforce Men category if previously Unisex
+    if (form.value.category === 'Unisex') {
+      form.value.category = 'Men'
+    }
   }
 })
 

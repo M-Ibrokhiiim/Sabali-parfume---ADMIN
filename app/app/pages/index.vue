@@ -87,6 +87,7 @@
               class="snap-center min-w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
+          
           <!-- Indicator Dots if multiple images -->
           <div v-if="product.images && product.images.length > 1" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
             <div 
@@ -104,25 +105,16 @@
           <!-- Luxury Typography Placeholder if no image is present -->
           <div 
             v-if="!product.images || product.images.length === 0"
-            class="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-2 text-center select-none"
+            class="absolute inset-0 w-full h-full flex flex-col items-center justify-center   text-center select-none"
             :class="store.isDarkMode.value 
               ? 'bg-gradient-to-b from-zinc-900 to-black' 
               : 'bg-gradient-to-b from-zinc-100 to-zinc-50'"
           >
-            <span 
-              class="text-xs uppercase tracking-[0.35em] font-black transition-colors duration-300"
-              :class="store.isDarkMode.value 
-                ? 'text-white/25 group-hover:text-white/40' 
-                : 'text-black/25 group-hover:text-black/40'"
-            >
-              SABALI
-            </span>
-            <span 
-              class="text-[8px] uppercase tracking-[0.15em] font-light mt-1"
-              :class="store.isDarkMode.value ? 'text-white/15' : 'text-black/15'"
-            >
-              {{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Uniseks') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Унисекс') }}
-            </span>
+             <img 
+              :key="idx"
+              :src="defaultPic" 
+              class="snap-center min-w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           </div>
         </div>
 
@@ -145,8 +137,8 @@
             </div>
 
             <!-- Price and volume tag -->
-            <div class="flex items-center gap-3">
-              <span class="text-sm font-black tracking-wide" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">${{ product.price }}</span>
+             <span class="text-sm font-black tracking-wide" :class="store.isDarkMode.value ? 'text-white' : 'text-black'">UZS: {{ product.price }}</span>
+            <div class="flex items-center gap-3 mt-2">
               <span 
                 class="text-[10px] uppercase tracking-[0.15em] border px-2 py-0.5 transition-all duration-500"
                 :class="store.isDarkMode.value 
@@ -242,6 +234,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '~/composables/useStore'
+import defaultPic from '../assets/pic/Icon.ico'
 
 const router = useRouter()
 const store = useStore()
