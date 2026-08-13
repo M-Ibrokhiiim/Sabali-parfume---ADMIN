@@ -13,6 +13,7 @@ export interface Product {
   sales: number
   rating: number
   createdAt: string
+  starred?: boolean
 }
 
 // Initial mockup perfumes
@@ -29,7 +30,8 @@ const DEFAULT_PRODUCTS: Product[] = [
     images: [],
     sales: 34,
     rating: 4.9,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    starred: true
   },
   {
     id: 'sabali-2',
@@ -43,7 +45,8 @@ const DEFAULT_PRODUCTS: Product[] = [
     images: [],
     sales: 22,
     rating: 4.7,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    starred: false
   },
   {
     id: 'sabali-3',
@@ -86,6 +89,7 @@ const TRANSLATIONS = {
     tabAll: 'BARCHASI',
     tabMen: 'ERKAKLAR',
     tabWomen: 'AYOLLAR',
+    tabTrend: 'TREND',
     syncingDb: 'Ma\'lumotlar bazasi sinxronlanmoqda...',
     noProductsFound: 'Mahsulotlar topilmadi',
     tryAdjusting: 'Filtrlarni yoki qidiruv mezonlarini o\'zgartirib ko\'ring.',
@@ -181,6 +185,7 @@ const TRANSLATIONS = {
     tabAll: 'ВСЕ',
     tabMen: 'МУЖСКИЕ',
     tabWomen: 'ЖЕНСКИЕ',
+    tabTrend: 'ТРЕНД',
     syncingDb: 'Синхронизация базы данных...',
     noProductsFound: 'Продукты не найдены',
     tryAdjusting: 'Попробуйте изменить фильтры или критерии поиска.',
@@ -283,6 +288,9 @@ export const useStore = () => {
   // Admin Profile state
   const adminName = useState<string>('sabali-admin-name', () => 'SABALI PARFUME')
   const adminPic = useState<string | null>('sabali-admin-pic', () => null)
+
+  // Shared active tab state
+  const activeTab = useState<string>('sabali-active-tab', () => 'all')
 
   // Check if we are running in the browser
   const isBrowser = typeof window !== 'undefined'
@@ -421,7 +429,6 @@ export const useStore = () => {
 
   // Create Product
   const addProduct = async (productData: Omit<Product, 'id' | 'sales' | 'rating' | 'createdAt'>) => {
-    loading.value = true
     error.value = null
 
     const newProduct: Product = {
@@ -444,8 +451,6 @@ export const useStore = () => {
       })
     } catch (e) {
       console.warn('Could not post to NestJS backend, saved locally.', e)
-    } finally {
-      loading.value = false
     }
 
     return newProduct
@@ -453,7 +458,6 @@ export const useStore = () => {
 
   // Update Product
   const updateProduct = async (id: string, updatedData: Partial<Product>) => {
-    loading.value = true
     error.value = null
 
     const updated = products.value.map(p => {
@@ -473,14 +477,11 @@ export const useStore = () => {
       })
     } catch (e) {
       console.warn('Could not put to NestJS backend, saved locally.', e)
-    } finally {
-      loading.value = false
     }
   }
 
   // Delete Product
   const deleteProduct = async (id: string) => {
-    loading.value = true
     error.value = null
 
     const updated = products.value.filter(p => p.id !== id)
@@ -494,8 +495,6 @@ export const useStore = () => {
       })
     } catch (e) {
       console.warn('Could not delete from NestJS backend, removed locally.', e)
-    } finally {
-      loading.value = false
     }
   }
 
@@ -552,6 +551,7 @@ export const useStore = () => {
     setLocale,
     adminName,
     adminPic,
-    updateAdminProfile
+    updateAdminProfile,
+    activeTab
   }
 }

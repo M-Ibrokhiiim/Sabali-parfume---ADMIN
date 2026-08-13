@@ -66,6 +66,23 @@
           ? 'bg-zinc-950 border-white/20 hover:border-white/30'
           : 'bg-white border-black/10 hover:border-black/30'"
       >
+        <!-- Star Toggle Button (Top Right Corner) -->
+        <button 
+          @click.stop="toggleStar(product)"
+          class="absolute top-4 right-4 z-20 p-1.5 transition-all duration-300 hover:scale-110 cursor-pointer text-yellow-500"
+          aria-label="Toggle Star"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            :fill="product.starred ? 'currentColor' : 'none'" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            class="w-8 h-7 transition-colors duration-300"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.184-.377.724-.377.908 0l1.96 4.02 4.358.64c.417.062.584.58.282.88l-3.153 3.125.744 4.41c.071.424-.37.747-.75.547L12 14.823l-3.901 2.09c-.38.201-.821-.121-.75-.546l.743-4.41-3.153-3.125c-.302-.3-.135-.818.282-.88l4.358-.64 1.96-4.02Z" />
+          </svg>
+        </button>
 
         <!-- Product Image (High fashion design aspect ratio with CSS Carousel) -->
         <div 
@@ -241,7 +258,7 @@ const store = useStore()
 const { products, loading, deleteProduct, updateProduct } = store
 
 const searchQuery = ref('')
-const activeTab = ref('all')
+const activeTab = store.activeTab
 
 // Track active product image index for indicators
 const activeImageMap = ref({})
@@ -259,6 +276,7 @@ const tabs = computed(() => [
   { label: store.t('tabAll'), value: 'all' },
   { label: store.t('tabMen'), value: 'Men' },
   { label: store.t('tabWomen'), value: 'Women' },
+  { label: store.t('tabTrend'), value: 'Trend' },
 ])
 
 const filteredProducts = computed(() => {
@@ -266,10 +284,16 @@ const filteredProducts = computed(() => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           p.brand.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           p.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    const matchesTab = activeTab.value === 'all' || p.category === activeTab.value
+    const matchesTab = activeTab.value === 'all' || 
+                       (activeTab.value === 'Trend' ? p.starred : p.category === activeTab.value)
     return matchesSearch && matchesTab
   })
 })
+
+const toggleStar = async (product) => {
+  const newStarred = !product.starred
+  await updateProduct(product.id, { starred: newStarred })
+}
 
 // Editing routing
 const openEditPage = (id) => {
