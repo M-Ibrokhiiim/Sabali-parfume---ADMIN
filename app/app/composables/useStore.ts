@@ -162,7 +162,15 @@ const TRANSLATIONS = {
     dbCacheReset: 'Ma\'lumotlar ombori keshini tozalash',
     dbCacheDesc: 'Standart namunalarni tiklash va LocalStorage-ni tozalash',
     wipeCache: 'Keshni tozalash',
-    confirmWipe: 'KESHNI TOZALASH VA BARCHA NAMUNALARNI TIKLASHNI HOHLAYSIZMI?'
+    confirmWipe: 'KESHNI TOZALASH VA BARCHA NAMUNALARNI TIKLASHNI HOHLAYSIZMI?',
+    editProfile: "O'zgartirish",
+    editProfileTitle: "Profilni tahrirlash",
+    adminNameLabel: "Admin nomi",
+    profilePicLabel: "Profil rasmi",
+    btnSave: "SAQLASH",
+    backToProfile: "Profilga qaytish",
+    changePhoto: "Rasmni o'zgartirish",
+    defaultPhoto: "Standart rasm"
   },
   ru: {
     // Nav
@@ -250,7 +258,15 @@ const TRANSLATIONS = {
     dbCacheReset: 'Сброс кэша базы данных',
     dbCacheDesc: 'Восстановить макеты и очистить LocalStorage',
     wipeCache: 'Очистить кэш',
-    confirmWipe: 'ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ ОЧИСТИТЬ КЭШ И ВОССТАНОВИТЬ ВСЕ МАКЕТЫ?'
+    confirmWipe: 'ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ ОЧИСТИТЬ КЭШ И ВОССТАНОВИТЬ ВСЕ МАКЕТЫ?',
+    editProfile: "Изменить",
+    editProfileTitle: "Редактировать профиль",
+    adminNameLabel: "Имя админа",
+    profilePicLabel: "Фото профиля",
+    btnSave: "СОХРАНИТЬ",
+    backToProfile: "Вернуться в профиль",
+    changePhoto: "Изменить фото",
+    defaultPhoto: "Стандартное фото"
   }
 }
 
@@ -264,6 +280,10 @@ export const useStore = () => {
   // Localization state
   const locale = useState<'uz' | 'ru'>('sabali-locale', () => 'uz')
 
+  // Admin Profile state
+  const adminName = useState<string>('sabali-admin-name', () => 'SABALI PARFUME')
+  const adminPic = useState<string | null>('sabali-admin-pic', () => null)
+
   // Check if we are running in the browser
   const isBrowser = typeof window !== 'undefined'
 
@@ -275,6 +295,19 @@ export const useStore = () => {
   // Initialize store from localStorage on client-side
   const initStore = () => {
     if (!isBrowser) return
+
+    // Load admin profile details
+    const savedAdminName = localStorage.getItem('sabali_admin_name')
+    if (savedAdminName) {
+      adminName.value = savedAdminName
+    } else {
+      adminName.value = 'SABALI PARFUME'
+    }
+
+    const savedAdminPic = localStorage.getItem('sabali_admin_pic')
+    if (savedAdminPic) {
+      adminPic.value = savedAdminPic
+    }
 
     // Load theme
     const savedTheme = localStorage.getItem('sabali_theme')
@@ -488,6 +521,19 @@ export const useStore = () => {
     }
   }
 
+  const updateAdminProfile = (name: string, pic: string | null) => {
+    adminName.value = name
+    adminPic.value = pic
+    if (isBrowser) {
+      localStorage.setItem('sabali_admin_name', name)
+      if (pic) {
+        localStorage.setItem('sabali_admin_pic', pic)
+      } else {
+        localStorage.removeItem('sabali_admin_pic')
+      }
+    }
+  }
+
   return {
     products,
     loading,
@@ -503,6 +549,9 @@ export const useStore = () => {
     deleteProduct,
     updateApiBaseUrl,
     toggleTheme,
-    setLocale
+    setLocale,
+    adminName,
+    adminPic,
+    updateAdminProfile
   }
 }

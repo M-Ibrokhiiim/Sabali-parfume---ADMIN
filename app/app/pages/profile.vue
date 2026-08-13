@@ -16,27 +16,67 @@
 
     <!-- Admin Profile Card -->
     <div 
-      class="border p-6 flex items-center gap-4 md:gap-6 transition-all duration-500"
+      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all duration-500 relative"
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10'"
     >
+      <!-- Notification Bell -->
+      <div class="absolute top-5 right-5 cursor-pointer group" @click="playBellSound">
+        <div class="relative">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            class="w-7 h-7 transition-transform group-hover:rotate-12 duration-300"
+            :class="store.isDarkMode.value ? 'text-white/60 group-hover:text-white' : 'text-black/60 group-hover:text-black'"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+          <span 
+            class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black border transition-all duration-500"
+            :class="store.isDarkMode.value 
+              ? 'bg-white text-black border-zinc-950' 
+              : 'bg-black text-white border-white'"
+          >
+            1
+          </span>
+        </div>
+      </div>
+
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-22 h-22 rounded-[100%] overflow-hidden  md:w-20 md:h-20 border flex items-center justify-center font-black text-xl tracking-[0.1em] transition-all duration-500"
-        :class="store.isDarkMode.value ? 'border-white/20 bg-black text-white' : 'border-black/20 bg-zinc-100 text-black'"
+        class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
+        :class="store.isDarkMode.value ? 'border-white/20 bg-black' : 'border-black/20 bg-zinc-100'"
       >
-        <img :src="ProfilePic" />
+        <img :src="store.adminPic.value || ProfilePic" class="w-full h-full object-cover" />
       </div>
-      <div class="space-y-1 flex-1 min-w-0">
-        <p class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">{{ store.t('authorizedAccount') }}</p>
-        <h3 class="text-base uppercase tracking-[0.15em] font-extrabold truncate" :class="store.isDarkMode.value ? 'text-white' : 'text-black'"></h3>
-        <p class="text-xs font-light truncate" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">admin@sabali-parfums.com</p>
-      </div>
-      <span 
-        class="text-[9px] uppercase tracking-[0.2em] font-black border px-3 py-1 self-start transition-all duration-500"
-        :class="store.isDarkMode.value ? 'border-white bg-white text-black' : 'border-black bg-black text-white'"
+
+      <!-- User Name -->
+      <h3 
+        class="text-base uppercase tracking-[0.15em] font-extrabold transition-colors duration-500" 
+        :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
       >
-        {{ store.t('owner') }}
-      </span>
+        {{ store.adminName.value }}
+      </h3>
+
+      <!-- Additional Information -->
+      <div class="space-y-1">
+        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
+          admin@sabali-parfums.com
+        </p>
+      </div>
+
+      <!-- Edit Button -->
+      <NuxtLink 
+        to="/profile-edit"
+        class="px-5 py-2 text-xs font-black uppercase tracking-[0.15em] border transition-all duration-300 rounded-none inline-block mt-2"
+        :class="store.isDarkMode.value 
+          ? 'bg-white text-black border-white hover:bg-black hover:text-white' 
+          : 'bg-black text-white border-black hover:bg-white hover:text-black'"
+      >
+        {{ store.t('editProfile') }}
+      </NuxtLink>
     </div>
 
     <!-- CATEGORY DISTRIBUTION METRICS -->
@@ -107,6 +147,59 @@ const womenPercentage = computed(() => {
   if (productsCount.value === 0) return 0
   return Math.round((categoryCounts.value.Women / productsCount.value) * 100)
 })
+
+// Play high-quality synthesized luxury glass-harp arpeggio chime & trigger haptic vibration
+const playBellSound = async () => {
+  if (typeof window === 'undefined') return
+
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+
+    const ctx = new AudioContext()
+    
+    // Resume audio context to bypass iOS Safari / mobile autoplay touch/unlock security blocks
+    if (ctx.state === 'suspended') {
+      await ctx.resume()
+    }
+
+    const now = ctx.currentTime
+
+    // Beautiful ascending arpeggio notes in A Major chord
+    const arpeggio = [
+      { freq: 659.25, delay: 0.0, vol: 0.25, decay: 0.8 },   // E5
+      { freq: 880.00, delay: 0.08, vol: 0.22, decay: 0.8 },  // A5
+      { freq: 1109.73, delay: 0.16, vol: 0.20, decay: 1.0 }  // C#6
+    ]
+
+    arpeggio.forEach((note) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(note.freq, now + note.delay)
+
+      // Sound decay envelope
+      gain.gain.setValueAtTime(0.001, now + note.delay)
+      gain.gain.linearRampToValueAtTime(note.vol, now + note.delay + 0.02) // quick attack
+      gain.gain.exponentialRampToValueAtTime(0.001, now + note.delay + note.decay)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(now + note.delay)
+      osc.stop(now + note.delay + note.decay)
+    })
+
+    // Physical haptic vibration pattern for mobile (Feature-detected for Android/Mobile support)
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      // Dual premium touch pulses to match arpeggio rise
+      navigator.vibrate([40, 60, 100])
+    }
+  } catch (err) {
+    console.error('Failed to play bell audio/vibration on mobile/desktop:', err)
+  }
+}
 </script>
 
 <style scoped>
