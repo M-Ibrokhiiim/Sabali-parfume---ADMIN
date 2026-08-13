@@ -170,6 +170,15 @@
               >{{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Ayollar') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Женские') }}</span>
             </div>
 
+            <!-- Product Description -->
+            <p 
+              v-if="product.description"
+              class="text-xs transition-colors duration-500 mt-2 line-clamp-2 md:line-clamp-3 leading-relaxed font-light"
+              :class="store.isDarkMode.value ? 'text-white/60' : 'text-black/60'"
+            >
+              {{ product.description }}
+            </p>
+
           </div>
 
           <!-- Bottom Row: Statistics & Brutalist Action Buttons -->
