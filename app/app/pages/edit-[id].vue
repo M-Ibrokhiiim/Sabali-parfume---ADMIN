@@ -285,8 +285,12 @@ onMounted(() => {
   const targetProduct = products.value.find(p => p.id === targetId)
 
   if (targetProduct) {
-    // Populate form clone, ensuring images is an array
-    form.value = { ...targetProduct, images: targetProduct.images ? [...targetProduct.images] : [] }
+    // Populate form clone, ensuring images is an array and initializing imageFiles
+    form.value = { 
+      ...targetProduct, 
+      images: targetProduct.images ? [...targetProduct.images] : [],
+      imageFiles: []
+    }
     // Enforce Men category if previously Unisex
     if (form.value.category === 'Unisex') {
       form.value.category = 'Men'
@@ -343,6 +347,7 @@ const triggerFileInput = () => {
 // Convert files to Base64 arrays
 const processFiles = (files) => {
   if (!form.value || !form.value.images) return
+  if (!form.value.imageFiles) form.value.imageFiles = []
   
   const currentCount = form.value.images.length
   if (currentCount >= 3) return
@@ -352,6 +357,8 @@ const processFiles = (files) => {
   const filesToProcess = validImageFiles.slice(0, remainingSlots)
   
   filesToProcess.forEach(file => {
+    form.value.imageFiles.push(file)
+
     const reader = new FileReader()
     reader.onload = (e) => {
       if (form.value.images.length < 3) {
@@ -377,7 +384,20 @@ const handleDrop = (e) => {
 }
 
 const removeImage = (index) => {
+  const removedImg = form.value.images[index]
   form.value.images.splice(index, 1)
+
+  if (removedImg && removedImg.startsWith('data:')) {
+    let base64Index = 0
+    for (let i = 0; i < index; i++) {
+      if (form.value.images[i] && form.value.images[i].startsWith('data:')) {
+        base64Index++
+      }
+    }
+    if (form.value.imageFiles) {
+      form.value.imageFiles.splice(base64Index, 1)
+    }
+  }
 }
 
 

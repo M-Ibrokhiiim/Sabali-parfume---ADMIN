@@ -292,7 +292,8 @@ const form = ref({
   category: 'Men',
   volume: '100ml',
   description: '',
-  images: []
+  images: [],
+  imageFiles: []
 })
 
 const formattedPrice = computed(() => {
@@ -343,6 +344,7 @@ const triggerFileInput = () => {
 // Convert files to Base64 arrays
 const processFiles = (files) => {
   if (!form.value || !form.value.images) return
+  if (!form.value.imageFiles) form.value.imageFiles = []
   
   const currentCount = form.value.images.length
   if (currentCount >= 3) return
@@ -352,6 +354,8 @@ const processFiles = (files) => {
   const filesToProcess = validImageFiles.slice(0, remainingSlots)
   
   filesToProcess.forEach(file => {
+    form.value.imageFiles.push(file)
+
     const reader = new FileReader()
     reader.onload = (e) => {
       if (form.value.images.length < 3) {
@@ -378,6 +382,9 @@ const handleDrop = (e) => {
 
 const removeImage = (index) => {
   form.value.images.splice(index, 1)
+  if (form.value.imageFiles) {
+    form.value.imageFiles.splice(index, 1)
+  }
 }
 
 const submitForm = async () => {

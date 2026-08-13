@@ -128,7 +128,6 @@
               : 'bg-gradient-to-b from-zinc-100 to-zinc-50'"
           >
              <img 
-              :key="idx"
               :src="defaultPic" 
               class="snap-center min-w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -169,6 +168,15 @@
                   : 'text-black/40 border-black/5 bg-zinc-100/50'"
               >{{ store.locale.value === 'uz' ? (product.category === 'Men' ? 'Erkaklar' : product.category === 'Women' ? 'Ayollar' : 'Ayollar') : (product.category === 'Men' ? 'Мужские' : product.category === 'Women' ? 'Женские' : 'Женские') }}</span>
             </div>
+
+            <!-- Product Description -->
+            <p 
+              v-if="product.description"
+              class="text-xs transition-colors duration-500 mt-2 line-clamp-2 md:line-clamp-3 leading-relaxed font-light"
+              :class="store.isDarkMode.value ? 'text-white/60' : 'text-black/60'"
+            >
+              {{ product.description }}
+            </p>
 
           </div>
 
@@ -248,17 +256,27 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '~/composables/useStore'
 import defaultPic from '../assets/pic/Icon.ico'
 
 const router = useRouter()
 const store = useStore()
-const { products, loading, deleteProduct, updateProduct } = store
+
+// Preserve Vue reactivity of products and loading states via computed properties
+const products = computed(() => store.products.value)
+const loading = computed(() => store.loading.value)
+
+const { deleteProduct, updateProduct } = store
 
 const searchQuery = ref('')
 const activeTab = store.activeTab
+
+// Watch activeTab to trigger dynamic API call reloading
+watch(activeTab, () => {
+  store.fetchProducts()
+})
 
 // Track active product image index for indicators
 const activeImageMap = ref({})

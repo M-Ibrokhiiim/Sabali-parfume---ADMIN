@@ -13,7 +13,7 @@ export const useActions = () => {
   const loading = ref<boolean>(false)
   const error = ref<string | null>(null)
   
-  const actionsBaseUrl = ref<string>('http://localhost:4000')
+  const actionsBaseUrl = ref<string>('https://sabali-parfum-backend.onrender.com')
   const token = ref<string | null>('SABALI')
   const isLoggedIn = ref<boolean>(false)
 

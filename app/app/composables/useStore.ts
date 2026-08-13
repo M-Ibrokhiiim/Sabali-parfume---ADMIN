@@ -279,7 +279,10 @@ export const useStore = () => {
   const products = useState<Product[]>('sabali-products', () => [])
   const loading = useState<boolean>('sabali-loading', () => false)
   const error = useState<string | null>('sabali-error', () => null)
-  const apiBaseUrl = useState<string>('sabali-api-url', () => 'http://localhost:3000')
+  
+  // Render Cloud API Base URL
+  const apiBaseUrl = useState<string>('sabali-api-url', () => 'https://sabali-parfum-backend.onrender.com')
+
   const isDarkMode = useState<boolean>('sabali-dark-mode', () => true)
   
   // Localization state
@@ -331,10 +334,18 @@ export const useStore = () => {
       locale.value = savedLocale
     }
 
-    // Load API URL
+    // Load API URL with self-healing local network IP resolution
     const savedUrl = localStorage.getItem('sabali_api_url')
     if (savedUrl) {
-      apiBaseUrl.value = savedUrl
+      if (savedUrl.includes('localhost') || savedUrl.includes('127.0.0.1') || savedUrl.includes('192.168.')) {
+        apiBaseUrl.value = 'https://sabali-parfum-backend.onrender.com'
+        localStorage.setItem('sabali_api_url', 'https://sabali-parfum-backend.onrender.com')
+      } else {
+        apiBaseUrl.value = savedUrl
+      }
+    } else {
+      apiBaseUrl.value = 'https://sabali-parfum-backend.onrender.com'
+      localStorage.setItem('sabali_api_url', 'https://sabali-parfum-backend.onrender.com')
     }
 
     // Load products
@@ -367,53 +378,95 @@ export const useStore = () => {
   const fetchProducts = async () => {
     loading.value = true
     error.value = null
-    
-    // First, sync with local storage
-    if (isBrowser) {
-      const savedProducts = localStorage.getItem('sabali_products')
-      if (savedProducts) {
-        try {
-          let parsed = JSON.parse(savedProducts)
-          parsed = parsed.map((p: any) => {
-            if (p.image && !p.images) {
-              p.images = [p.image]
-              delete p.image
-            }
-            if (!p.images) p.images = []
-            return p
-          })
-          products.value = parsed
-        } catch (e) {
-          // ignore
+
+    const mapProduct = (p: any, category: 'Men' | 'Women') => {
+      const rawImages = Array.isArray(p.image) ? p.image : (p.image ? [p.image] : [])
+      const mappedImages = rawImages.map((img: string) => {
+        if (img && !img.startsWith('http')) {
+          const prefix = img.startsWith('/') ? '' : '/'
+          return `${apiBaseUrl.value}${prefix}${img}`
         }
+        return img || ''
+      }).filter(Boolean)
+
+      return {
+        id: String(p.id),
+        name: p.name || '',
+        brand: p.brand || '',
+        price: Number(p.price || 0),
+        volume: p.capacity || p.volume || '100ml',
+        category,
+        stock: Number(p.stock ?? 10),
+        description: p.description || '',
+        images: mappedImages,
+        sales: Number(p.sales || 0),
+        rating: Number(p.rating || 5.0),
+        createdAt: p.createdAt || new Date().toISOString(),
+        starred: p.starred === true || p.starred === 'true'
       }
     }
 
     try {
-      // Try to fetch from real NestJS backend
-      let response = await $fetch<Product[]>(`${apiBaseUrl.value}/products`, {
-        timeout: 3000 // fail fast if offline
-      })
-      
-      if (response && Array.isArray(response)) {
-        // Run migration for backend data as well
-        response = response.map((p: any) => {
-          if (p.image && !p.images) {
-            p.images = [p.image]
-            delete p.image
-          }
-          if (!p.images) p.images = []
-          return p
+      let combined: Product[] = []
+
+      if (activeTab.value === 'all') {
+        const [menResponse, womenResponse] = await Promise.all([
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/men`).catch(e => {
+            console.error('Error fetching men perfumes:', e)
+            return []
+          }),
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/women`).catch(e => {
+            console.error('Error fetching women perfumes:', e)
+            return []
+          })
+        ])
+        const mappedMen = menResponse.map(p => mapProduct(p, 'Men'))
+        const mappedWomen = womenResponse.map(p => mapProduct(p, 'Women'))
+        combined = [...mappedMen, ...mappedWomen]
+      } else if (activeTab.value === 'Men') {
+        const menResponse = await $fetch<any[]>(`${apiBaseUrl.value}/parfumes/men`).catch(e => {
+          console.error('Error fetching men perfumes:', e)
+          return []
         })
-        
-        products.value = response
-        if (isBrowser) {
-          localStorage.setItem('sabali_products', JSON.stringify(response))
+        combined = menResponse.map(p => mapProduct(p, 'Men'))
+      } else if (activeTab.value === 'Women') {
+        const womenResponse = await $fetch<any[]>(`${apiBaseUrl.value}/parfumes/women`).catch(e => {
+          console.error('Error fetching women perfumes:', e)
+          return []
+        })
+        combined = womenResponse.map(p => mapProduct(p, 'Women'))
+      } else if (activeTab.value === 'Trend') {
+        const [menTrendResponse, womenTrendResponse] = await Promise.all([
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/trend/men`).catch(e => {
+            console.error('Error fetching men trend perfumes:', e)
+            return []
+          }),
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/trend/women`).catch(e => {
+            console.error('Error fetching women trend perfumes:', e)
+            return []
+          })
+        ])
+        const mappedMen = menTrendResponse.map(p => mapProduct(p, 'Men'))
+        const mappedWomen = womenTrendResponse.map(p => mapProduct(p, 'Women'))
+        combined = [...mappedMen, ...mappedWomen]
+      }
+
+      products.value = combined
+      if (isBrowser) {
+        localStorage.setItem('sabali_products', JSON.stringify(combined))
+      }
+    } catch (e: any) {
+      console.warn('Backend connection issue, falling back to local storage.', e)
+      if (isBrowser) {
+        const savedProducts = localStorage.getItem('sabali_products')
+        if (savedProducts) {
+          try {
+            products.value = JSON.parse(savedProducts)
+          } catch (err) {
+            products.value = []
+          }
         }
       }
-    } catch (e) {
-      console.warn('Backend offline, using mock/local storage storage.', e)
-      // We fall back quietly as this is designed to operate locally as well
     } finally {
       loading.value = false
     }
@@ -428,73 +481,139 @@ export const useStore = () => {
   }
 
   // Create Product
-  const addProduct = async (productData: Omit<Product, 'id' | 'sales' | 'rating' | 'createdAt'>) => {
+  const addProduct = async (productData: any) => {
     error.value = null
+    loading.value = true
 
-    const newProduct: Product = {
-      ...productData,
-      id: 'sabali-' + Math.random().toString(36).substr(2, 9),
-      sales: 0,
-      rating: 5.0,
-      createdAt: new Date().toISOString()
+    const formData = new FormData()
+    const backendCategory = productData.category === 'Women' ? 'womens' : 'mens'
+    
+    formData.append('category', backendCategory)
+    formData.append('name', productData.name)
+    formData.append('brand', productData.brand)
+    formData.append('price', String(productData.price || 0))
+    formData.append('description', productData.description || '')
+    formData.append('starred', String(productData.starred ? 'true' : 'false'))
+    
+    // Append all raw File objects (up to 3)
+    if (productData.imageFiles && productData.imageFiles.length > 0) {
+      productData.imageFiles.slice(0, 3).forEach((file: File) => {
+        formData.append('image', file)
+      })
+    } else if (productData.imageFile) {
+      formData.append('image', productData.imageFile)
     }
-
-    const updated = [newProduct, ...products.value]
-    await syncAndSave(updated)
 
     try {
-      // Attempt backend API call
-      await $fetch(`${apiBaseUrl.value}/products`, {
+      const response = await $fetch<any>(`${apiBaseUrl.value}/admin-actions/product/new`, {
         method: 'POST',
-        body: newProduct,
-        timeout: 2000
+        headers: {
+          Authorization: 'Bearer SABALI'
+        },
+        body: formData
       })
-    } catch (e) {
-      console.warn('Could not post to NestJS backend, saved locally.', e)
+      
+      // Refresh products list
+      await fetchProducts()
+      return response
+    } catch (e: any) {
+      console.error('Error creating product:', e)
+      error.value = e.message || 'Error creating product'
+      throw e
+    } finally {
+      loading.value = false
     }
-
-    return newProduct
   }
 
   // Update Product
-  const updateProduct = async (id: string, updatedData: Partial<Product>) => {
+  const updateProduct = async (id: string, updatedData: any) => {
     error.value = null
+    loading.value = true
 
-    const updated = products.value.map(p => {
-      if (p.id === id) {
-        return { ...p, ...updatedData }
-      }
-      return p
-    })
-    await syncAndSave(updated)
+    // Find the original full product in our state
+    const originalProduct = products.value.find(p => p.id === id)
+    if (!originalProduct) {
+      console.error('Product not found in state, cannot update.')
+      loading.value = false
+      return
+    }
+
+    // Merge original product with updatedData
+    const mergedData = { ...originalProduct, ...updatedData }
+
+    const formData = new FormData()
+    const backendCategory = mergedData.category === 'Women' ? 'womens' : 'mens'
+    
+    formData.append('category', backendCategory)
+    formData.append('name', mergedData.name)
+    formData.append('brand', mergedData.brand)
+    formData.append('price', String(mergedData.price || 0))
+    formData.append('description', mergedData.description || '')
+    formData.append('starred', String(mergedData.starred ? 'true' : 'false'))
+    
+    // Append all raw File objects (up to 3)
+    if (updatedData.imageFiles && updatedData.imageFiles.length > 0) {
+      updatedData.imageFiles.slice(0, 3).forEach((file: File) => {
+        formData.append('image', file)
+      })
+    } else if (updatedData.imageFile) {
+      formData.append('image', updatedData.imageFile)
+    }
+
+    // Determine original category for route parameter
+    const routeCategory = originalProduct.category === 'Women' ? 'womens' : 'mens'
 
     try {
-      // Attempt backend API call
-      await $fetch(`${apiBaseUrl.value}/products/${id}`, {
-        method: 'PUT',
-        body: updatedData,
-        timeout: 2000
+      const response = await $fetch<any>(`${apiBaseUrl.value}/admin-actions/product/${routeCategory}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: 'Bearer SABALI'
+        },
+        body: formData
       })
-    } catch (e) {
-      console.warn('Could not put to NestJS backend, saved locally.', e)
+      
+      // Refresh products list
+      await fetchProducts()
+      return response
+    } catch (e: any) {
+      console.error('Error updating product:', e)
+      error.value = e.message || 'Error updating product'
+      throw e
+    } finally {
+      loading.value = false
     }
   }
 
   // Delete Product
   const deleteProduct = async (id: string) => {
     error.value = null
+    loading.value = true
 
-    const updated = products.value.filter(p => p.id !== id)
-    await syncAndSave(updated)
+    const originalProduct = products.value.find(p => p.id === id)
+    if (!originalProduct) {
+      console.error('Product not found in state, cannot delete.')
+      loading.value = false
+      return
+    }
+
+    const backendCategory = originalProduct.category === 'Women' ? 'womens' : 'mens'
 
     try {
-      // Attempt backend API call
-      await $fetch(`${apiBaseUrl.value}/products/${id}`, {
+      await $fetch(`${apiBaseUrl.value}/admin-actions/product/${backendCategory}/${id}`, {
         method: 'DELETE',
-        timeout: 2000
+        headers: {
+          Authorization: 'Bearer SABALI'
+        }
       })
-    } catch (e) {
-      console.warn('Could not delete from NestJS backend, removed locally.', e)
+      
+      // Refresh products list
+      await fetchProducts()
+    } catch (e: any) {
+      console.error('Error deleting product:', e)
+      error.value = e.message || 'Error deleting product'
+      throw e
+    } finally {
+      loading.value = false
     }
   }
 
