@@ -187,7 +187,11 @@
               >
                Muhimi Jonni Sog'lig'i 
               </p>
-             
+               
+              <p class="w-[100px] h-[25px] rounded-sm border-2 text-[11px] left-1/2 -translate-x-1/2 flex justify-center
+               items-center  absolute bottom-0 border-white/10 border-b-0"
+                :class="store.isDarkMode.value ? 'text-zinc-400' : 'text-zinc-600'"
+               >13.08.2026</p>
             </div>
           </div>
         </div>
