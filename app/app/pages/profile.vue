@@ -117,7 +117,7 @@
           >
             <!-- Close Button in Top Right Corner -->
             <button 
-              @click="isModalOpen = false" 
+              @click="closeModal" 
               class="absolute top-4 right-4 z-20 p-1.5 rounded-full border transition-all duration-300 hover:scale-110 cursor-pointer"
               :class="store.isDarkMode.value 
                 ? 'border-white/10 bg-zinc-950/85 text-white/60 hover:text-white hover:border-white' 
@@ -137,8 +137,11 @@
                 : 'bg-zinc-100 border-black/10'"
             >
               <div 
+                ref="modalSliderRef"
                 class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative"
                 @scroll="handleModalImageScroll"
+                @pointerdown="stopAutoPlay"
+                @wheel="stopAutoPlay"
               >
                 <img 
                   v-for="(img, idx) in modalPictures" 
@@ -201,7 +204,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount, nextTick } from 'vue'
 import { useStore } from '~/composables/useStore'
 import ProfilePic from "../assets/pic/AccountPic.png"
 import Congrats1 from "../assets/pic/congratsPic/1.jpg"
@@ -215,12 +218,53 @@ const { products } = store
 const isModalOpen = ref(false)
 const activeModalImageIndex = ref(0)
 const modalPictures = [Congrats1, Congrats2, Congrats3]
+const modalSliderRef = ref(null)
+
+let autoPlayInterval = null
+
+const startAutoPlay = () => {
+  stopAutoPlay()
+  autoPlayInterval = setInterval(() => {
+    if (!modalSliderRef.value) return
+    const container = modalSliderRef.value
+    const totalImages = modalPictures.length
+    if (totalImages <= 1) return
+
+    const nextIndex = (activeModalImageIndex.value + 1) % totalImages
+    const targetScrollLeft = nextIndex * container.clientWidth
+
+    container.scrollTo({
+      left: targetScrollLeft,
+      behavior: 'smooth'
+    })
+
+    activeModalImageIndex.value = nextIndex
+  }, 3000)
+}
+
+const stopAutoPlay = () => {
+  if (autoPlayInterval) {
+    clearInterval(autoPlayInterval)
+    autoPlayInterval = null
+  }
+}
  
 const openModal = async () => {
   activeModalImageIndex.value = 0
   isModalOpen.value = true
+  await nextTick()
+  startAutoPlay()
   await playBellSound()
 }
+
+const closeModal = () => {
+  isModalOpen.value = false
+  stopAutoPlay()
+}
+
+onBeforeUnmount(() => {
+  stopAutoPlay()
+})
 
 const handleModalImageScroll = (e) => {
   const scrollLeft = e.target.scrollLeft
