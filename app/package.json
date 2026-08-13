@@ -11,9 +11,13 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "cloudflare": "^7.0.0",
     "nuxt": "^4.4.12",
     "tailwindcss": "^4.3.3",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.86.0"
   }
 }
