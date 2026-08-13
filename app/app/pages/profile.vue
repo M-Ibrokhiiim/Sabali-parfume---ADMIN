@@ -46,7 +46,7 @@
 
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
+        class="w-32 h-32 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white/20 bg-black' : 'border-black/20 bg-zinc-100'"
       >
         <img :src="store.adminPic.value || ProfilePic" class="w-full h-full object-cover" />
