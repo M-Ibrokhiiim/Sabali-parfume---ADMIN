@@ -20,7 +20,7 @@
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10'"
     >
       <!-- Notification Bell -->
-      <div class="absolute top-5 right-5 cursor-pointer group">
+      <div class="absolute top-5 right-5 cursor-pointer group" @click="playBellSound">
         <div class="relative">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -34,7 +34,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
           </svg>
           <span 
-            class="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black border transition-all duration-500"
+            class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black border transition-all duration-500"
             :class="store.isDarkMode.value 
               ? 'bg-white text-black border-zinc-950' 
               : 'bg-black text-white border-white'"
@@ -147,6 +147,59 @@ const womenPercentage = computed(() => {
   if (productsCount.value === 0) return 0
   return Math.round((categoryCounts.value.Women / productsCount.value) * 100)
 })
+
+// Play high-quality synthesized luxury glass-harp arpeggio chime & trigger haptic vibration
+const playBellSound = async () => {
+  if (typeof window === 'undefined') return
+
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+
+    const ctx = new AudioContext()
+    
+    // Resume audio context to bypass iOS Safari / mobile autoplay touch/unlock security blocks
+    if (ctx.state === 'suspended') {
+      await ctx.resume()
+    }
+
+    const now = ctx.currentTime
+
+    // Beautiful ascending arpeggio notes in A Major chord
+    const arpeggio = [
+      { freq: 659.25, delay: 0.0, vol: 0.25, decay: 0.8 },   // E5
+      { freq: 880.00, delay: 0.08, vol: 0.22, decay: 0.8 },  // A5
+      { freq: 1109.73, delay: 0.16, vol: 0.20, decay: 1.0 }  // C#6
+    ]
+
+    arpeggio.forEach((note) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(note.freq, now + note.delay)
+
+      // Sound decay envelope
+      gain.gain.setValueAtTime(0.001, now + note.delay)
+      gain.gain.linearRampToValueAtTime(note.vol, now + note.delay + 0.02) // quick attack
+      gain.gain.exponentialRampToValueAtTime(0.001, now + note.delay + note.decay)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(now + note.delay)
+      osc.stop(now + note.delay + note.decay)
+    })
+
+    // Physical haptic vibration pattern for mobile (Feature-detected for Android/Mobile support)
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      // Dual premium touch pulses to match arpeggio rise
+      navigator.vibrate([40, 60, 100])
+    }
+  } catch (err) {
+    console.error('Failed to play bell audio/vibration on mobile/desktop:', err)
+  }
+}
 </script>
 
 <style scoped>
