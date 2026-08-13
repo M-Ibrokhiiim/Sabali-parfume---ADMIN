@@ -177,31 +177,17 @@
               <span 
                 class="text-[9px] uppercase tracking-[0.25em] font-bold text-amber-500 mb-1 animate-fade-in"
               >
-                {{ birthdaySubtitle }}
+                Og'ayni, to'yguningcha yasha
               </span>
-
-              <!-- Elegant Brand/Friend Greeting Header -->
-              <h4 
-                class="text-sm uppercase tracking-[0.2em] font-extrabold mb-5"
-                :class="store.isDarkMode.value ? 'text-white' : 'text-black'"
-              >
-                {{ birthdayTitle }}
-              </h4>
 
               <!-- Congratulations Message (Exactly 20 words for the active language) -->
               <p 
-                class="text-xs font-light leading-relaxed tracking-wide italic mb-6 animate-fade-in"
+                class="text-xl font-light leading-relaxed tracking-wide italic mb-6 animate-fade-in"
                 :class="store.isDarkMode.value ? 'text-zinc-400' : 'text-zinc-600'"
               >
-                "{{ birthdayGreeting }}"
+               Muhimi Jonni Sog'lig'i 
               </p>
-
-              <!-- Luxury Signature line -->
-              <div class="border-t pt-4 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
-                <span class="text-[9px] uppercase tracking-[0.25em] font-bold" :class="store.isDarkMode.value ? 'text-white/40' : 'text-black/40'">
-                  With Love, SabAli
-                </span>
-              </div>
+             
             </div>
           </div>
         </div>
