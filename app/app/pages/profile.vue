@@ -60,13 +60,6 @@
         {{ store.adminName.value }}
       </h3>
 
-      <!-- Additional Information -->
-      <div class="space-y-1">
-        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-          admin@sabali-parfums.com
-        </p>
-      </div>
-
       <!-- Edit Button -->
       <NuxtLink 
         to="/profile-edit"
