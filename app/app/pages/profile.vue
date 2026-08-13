@@ -16,8 +16,8 @@
 
     <!-- Admin Profile Card -->
     <div 
-      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all duration-500 relative"
-      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10'"
+      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all rounded-xl duration-500 relative"
+      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/30' : 'bg-white border-black/10'"
     >
       <!-- Notification Bell -->
       <div class="absolute top-5 right-5 cursor-pointer group" @click="playBellSound">
@@ -74,8 +74,8 @@
 
     <!-- CATEGORY DISTRIBUTION METRICS -->
     <div 
-      class="border p-6 space-y-5 transition-all duration-500"
-      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
+      class="border p-6 space-y-5 transition-all duration-500 rounded-xl"
+      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/30 text-white' : 'bg-white border-black/10 text-black'"
     >
       <div class="border-b pb-3 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
         <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">{{ store.t('categoryDistribution') }}</h4>
