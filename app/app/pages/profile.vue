@@ -16,8 +16,8 @@
 
     <!-- Admin Profile Card -->
     <div 
-      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all duration-500 relative"
-      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10' : 'bg-white border-black/10'"
+      class="border p-8 flex flex-col items-center justify-center text-center gap-5 transition-all rounded-xl duration-500 relative"
+      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/30' : 'bg-white border-black/10'"
     >
       <!-- Notification Bell -->
       <div class="absolute top-5 right-5 cursor-pointer group" @click="playBellSound">
@@ -46,7 +46,7 @@
 
       <!-- Monochrome Branding Avatar -->
       <div 
-        class="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
+        class="w-32 h-32 md:w-28 md:h-28 rounded-full overflow-hidden border flex items-center justify-center transition-all duration-500"
         :class="store.isDarkMode.value ? 'border-white/20 bg-black' : 'border-black/20 bg-zinc-100'"
       >
         <img :src="store.adminPic.value || ProfilePic" class="w-full h-full object-cover" />
@@ -59,13 +59,6 @@
       >
         {{ store.adminName.value }}
       </h3>
-
-      <!-- Additional Information -->
-      <div class="space-y-1">
-        <p class="text-xs font-light" :class="store.isDarkMode.value ? 'text-white/50' : 'text-black/50'">
-          admin@sabali-parfums.com
-        </p>
-      </div>
 
       <!-- Edit Button -->
       <NuxtLink 
@@ -81,8 +74,8 @@
 
     <!-- CATEGORY DISTRIBUTION METRICS -->
     <div 
-      class="border p-6 space-y-5 transition-all duration-500"
-      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
+      class="border p-6 space-y-5 transition-all duration-500 rounded-xl"
+      :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/30 text-white' : 'bg-white border-black/10 text-black'"
     >
       <div class="border-b pb-3 transition-colors duration-500" :class="store.isDarkMode.value ? 'border-white/5' : 'border-black/5'">
         <h4 class="text-xs uppercase tracking-[0.2em] font-extrabold">{{ store.t('categoryDistribution') }}</h4>
