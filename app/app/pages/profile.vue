@@ -110,10 +110,10 @@
     <!-- BIRTHDAY CONGRATULATIONS MODAL -->
     <Teleport to="body">
       <transition name="fade">
-        <div v-if="isModalOpen" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 py-4 md:px-6">
+        <div v-if="isModalOpen" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80  backdrop-blur-sm px-4 py-4 md:px-6">
           <div 
-            class="relative max-w-3xl w-full   flex flex-col md:flex-row transition-all duration-500 rounded-xl overflow-hidden shadow-2xl"
-            :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-transparent border-white text-black'"
+            class="relative max-w-3xl w-full  flex flex-col md:flex-row h-[70vh] transition-all duration-500 rounded-xl overflow-hidden shadow-2xl"
+            :class="store.isDarkMode.value ? 'bg-zinc-950 border-2 border-white/10 text-white' : 'bg-transparent border-white text-black'"
           >
             <!-- Close Button in Top Right Corner -->
             <button 
@@ -168,7 +168,7 @@
             </div>
 
             <!-- 2- Text Section for Congratulation Text (same as overlay bg which is bg-black/80 backdrop-blur-sm) -->
-            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center text-center relative select-none bg-black/80 backdrop-blur-sm">
+            <div class="w-full md:w-1/2 p-8 flex flex-col h-full justify-center text-center relative select-none bg-black/80 backdrop-blur-sm">
               <!-- Animated Minimalist Spark Ornament -->
               <div class="flex justify-center mb-4 text-amber-500">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8 animate-pulse">
@@ -189,7 +189,7 @@
               >
                Muhimi Jonni Sog'lig'i 
               </p>
-               
+                
               <p class="w-[100px] h-[25px] rounded-sm border-2 text-[11px] left-1/2 -translate-x-1/2 flex justify-center
                items-center  absolute bottom-0 border-white/20 border-b-0 text-white bg-black/40 font-medium"
                >13.08.2026</p>
