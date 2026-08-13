@@ -381,6 +381,11 @@ const removeImage = (index) => {
 }
 
 const submitForm = async () => {
+  // If product is created while being on the Trend tab, automatically give it a star!
+  if (store.activeTab.value === 'Trend') {
+    form.value.starred = true
+  }
+
   await addProduct(form.value)
   showSuccess.value = true
   
