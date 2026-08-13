@@ -20,7 +20,7 @@
       :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/30' : 'bg-white border-black/10'"
     >
       <!-- Notification Bell -->
-      <div class="absolute top-5 right-5 cursor-pointer group" @click="playBellSound">
+      <div class="absolute top-5 right-5 cursor-pointer group" @click="openModal">
         <div class="relative">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -106,16 +106,192 @@
 
       </div>
     </div>
+
+    <!-- BIRTHDAY CONGRATULATIONS MODAL -->
+    <Teleport to="body">
+      <transition name="fade">
+        <div v-if="isModalOpen" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 py-4 md:px-6">
+          <div 
+            class="relative max-w-3xl w-full   flex flex-col md:flex-row transition-all duration-500 rounded-xl overflow-hidden shadow-2xl"
+            :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-transparent border-white text-black'"
+          >
+            <!-- Close Button in Top Right Corner -->
+            <button 
+              @click="closeModal" 
+              class="absolute top-4 right-4 z-20 p-1.5 rounded-full border transition-all duration-300 hover:scale-110 cursor-pointer"
+              :class="store.isDarkMode.value 
+                ? 'border-white/10 bg-zinc-950/85 text-white/60 hover:text-white hover:border-white' 
+                : 'border-white/20 bg-zinc-950/80 text-white hover:text-white hover:border-white'"
+              aria-label="Close modal"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <!-- 1- Picture Section (Big Picture Slider as Product Card of Picture) -->
+            <div 
+              class="w-full md:w-1/2 h-64 md:h-[400px] relative flex-shrink-0 transition-all duration-500    md:border-b-0 md:border-r"
+              :class="store.isDarkMode.value 
+                ? 'bg-zinc-900 border-white/10' 
+                : 'bg-zinc-100 border-white/10'"
+            >
+              <div 
+                ref="modalSliderRef"
+                class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none w-full h-full relative"
+                @scroll="handleModalImageScroll"
+                @pointerdown="stopAutoPlay"
+                @wheel="stopAutoPlay"
+              >
+                <img 
+                  v-for="(img, idx) in modalPictures" 
+                  :key="idx"
+                  :src="img" 
+                  class="snap-center min-w-full h-full  object-cover  transition-transform duration-500 hover:scale-105"
+                  alt="Birthday Card Slide"
+                />
+              </div>
+              
+              <!-- Indicator Dots if multiple images -->
+              <div v-if="modalPictures.length > 1" class="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
+                <div 
+                  v-for="(_, idx) in modalPictures" 
+                  :key="'dot-'+idx" 
+                  class="h-1 rounded-full shadow-md transition-all duration-300" 
+                  :class="[
+                    activeModalImageIndex === idx 
+                      ? 'bg-white w-4' 
+                      : 'bg-white/40 w-1.5'
+                  ]"
+                ></div>
+              </div>
+            </div>
+
+            <!-- 2- Text Section for Congratulation Text (same as overlay bg which is bg-black/80 backdrop-blur-sm) -->
+            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center text-center relative select-none bg-black/80 backdrop-blur-sm">
+              <!-- Animated Minimalist Spark Ornament -->
+              <div class="flex justify-center mb-4 text-amber-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8 animate-pulse">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499c.184-.377.724-.377.908 0l1.96 4.02 4.358.64c.417.062.584.58.282.88l-3.153 3.125.744 4.41c.071.424-.37.747-.75.547L12 14.823l-3.901 2.09c-.38.201-.821-.121-.75-.546l.743-4.41-3.153-3.125c-.302-.3-.135-.818.282-.88l4.358-.64 1.96-4.02Z" />
+                </svg>
+              </div>
+
+              <!-- Luxury Subtitle -->
+              <span 
+                class="text-[9px] uppercase tracking-[0.25em] font-bold text-amber-400 mb-1 animate-fade-in"
+              >
+                Og'ayni, to'yguningcha yasha
+              </span>
+
+              <!-- Congratulations Message -->
+              <p 
+                class="text-xl font-light leading-relaxed tracking-wide italic mb-6 animate-fade-in text-white"
+              >
+               Muhimi Jonni Sog'lig'i 
+              </p>
+               
+              <p class="w-[100px] h-[25px] rounded-sm border-2 text-[11px] left-1/2 -translate-x-1/2 flex justify-center
+               items-center  absolute bottom-0 border-white/20 border-b-0 text-white bg-black/40 font-medium"
+               >13.08.2026</p>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onBeforeUnmount, nextTick } from 'vue'
 import { useStore } from '~/composables/useStore'
 import ProfilePic from "../assets/pic/AccountPic.png"
+import Congrats1 from "../assets/pic/congratsPic/1.jpg"
+import Congrats2 from "../assets/pic/congratsPic/2.jpg"
+import Congrats3 from "../assets/pic/congratsPic/3.jpg"
+
 
 const store = useStore()
 const { products } = store
+
+const isModalOpen = ref(false)
+const activeModalImageIndex = ref(0)
+const modalPictures = [Congrats1, Congrats2, Congrats3]
+const modalSliderRef = ref(null)
+
+let autoPlayInterval = null
+
+const startAutoPlay = () => {
+  stopAutoPlay()
+  autoPlayInterval = setInterval(() => {
+    if (!modalSliderRef.value) return
+    const container = modalSliderRef.value
+    const totalImages = modalPictures.length
+    if (totalImages <= 1) return
+
+    const nextIndex = (activeModalImageIndex.value + 1) % totalImages
+    const targetScrollLeft = nextIndex * container.clientWidth
+
+    container.scrollTo({
+      left: targetScrollLeft,
+      behavior: 'smooth'
+    })
+
+    activeModalImageIndex.value = nextIndex
+  }, 3000)
+}
+
+const stopAutoPlay = () => {
+  if (autoPlayInterval) {
+    clearInterval(autoPlayInterval)
+    autoPlayInterval = null
+  }
+}
+ 
+const openModal = async () => {
+  activeModalImageIndex.value = 0
+  isModalOpen.value = true
+  await nextTick()
+  startAutoPlay()
+  await playBellSound()
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
+  stopAutoPlay()
+}
+
+onBeforeUnmount(() => {
+  stopAutoPlay()
+})
+
+const handleModalImageScroll = (e) => {
+  const scrollLeft = e.target.scrollLeft
+  const width = e.target.clientWidth
+  if (width === 0) return
+  activeModalImageIndex.value = Math.round(scrollLeft / width)
+}
+
+const birthdayTitle = computed(() => {
+  if (store.locale.value === 'uz') return "AZIZ DO'STIMGA"
+  if (store.locale.value === 'ru') return "ДОРОГОМУ ДРУГУ"
+  return "TO MY DEAR FRIEND"
+})
+
+const birthdaySubtitle = computed(() => {
+  if (store.locale.value === 'uz') return "TUG'ILGAN KUN TABRIGI"
+  if (store.locale.value === 'ru') return "С ДНЕМ РОЖДЕНИЯ"
+  return "BIRTHDAY CELEBRATION"
+})
+
+const birthdayGreeting = computed(() => {
+  if (store.locale.value === 'uz') {
+    return "Tug'ilgan kuning bilan, aziz do'stim! Senga cheksiz muvaffaqiyat, quvonchli lahzalar va hashamatli xotiralarga boy go'zal hayot tilayman. Shodlik hamisha hamrohing bo'lsin!"
+  } else if (store.locale.value === 'ru') {
+    return "С днем рождения, дорогой друг! Желаю тебе бесконечного успеха, радостных моментов и прекрасной жизни, полной роскошных воспоминаний. Будь всегда счастлив!"
+  } else {
+    return "Happy Birthday, my dear friend! Wishing you endless success, timeless moments of joy, and a life filled with luxurious memories."
+  }
+})
 
 // Calculations
 const productsCount = computed(() => products.value.length)
