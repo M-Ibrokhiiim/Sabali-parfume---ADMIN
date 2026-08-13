@@ -112,8 +112,8 @@
       <transition name="fade">
         <div v-if="isModalOpen" class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 py-4 md:px-6">
           <div 
-            class="relative max-w-3xl w-full border flex flex-col md:flex-row transition-all duration-500 rounded-xl overflow-hidden shadow-2xl"
-            :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-white border-black/10 text-black'"
+            class="relative max-w-3xl w-full   flex flex-col md:flex-row transition-all duration-500 rounded-xl overflow-hidden shadow-2xl"
+            :class="store.isDarkMode.value ? 'bg-zinc-950 border-white/10 text-white' : 'bg-transparent border-white text-black'"
           >
             <!-- Close Button in Top Right Corner -->
             <button 
@@ -121,7 +121,7 @@
               class="absolute top-4 right-4 z-20 p-1.5 rounded-full border transition-all duration-300 hover:scale-110 cursor-pointer"
               :class="store.isDarkMode.value 
                 ? 'border-white/10 bg-zinc-950/85 text-white/60 hover:text-white hover:border-white' 
-                : 'border-black/10 bg-white/85 text-black/60 hover:text-black hover:border-black'"
+                : 'border-white/20 bg-zinc-950/80 text-white hover:text-white hover:border-white'"
               aria-label="Close modal"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -131,10 +131,10 @@
 
             <!-- 1- Picture Section (Big Picture Slider as Product Card of Picture) -->
             <div 
-              class="w-full md:w-1/2 h-64 md:h-[400px] relative flex-shrink-0 transition-all duration-500 border-b md:border-b-0 md:border-r"
+              class="w-full md:w-1/2 h-64 md:h-[400px] relative flex-shrink-0 transition-all duration-500    md:border-b-0 md:border-r"
               :class="store.isDarkMode.value 
                 ? 'bg-zinc-900 border-white/10' 
-                : 'bg-zinc-100 border-black/10'"
+                : 'bg-zinc-100 border-white/10'"
             >
               <div 
                 ref="modalSliderRef"
@@ -160,15 +160,15 @@
                   class="h-1 rounded-full shadow-md transition-all duration-300" 
                   :class="[
                     activeModalImageIndex === idx 
-                      ? (store.isDarkMode.value ? 'bg-white w-4' : 'bg-black w-4') 
-                      : (store.isDarkMode.value ? 'bg-white/40 w-1.5' : 'bg-black/40 w-1.5')
+                      ? 'bg-white w-4' 
+                      : 'bg-white/40 w-1.5'
                   ]"
                 ></div>
               </div>
             </div>
 
-            <!-- 2- Text Section for Congratulation Text -->
-            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center text-center relative select-none">
+            <!-- 2- Text Section for Congratulation Text (same as overlay bg which is bg-black/80 backdrop-blur-sm) -->
+            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center text-center relative select-none bg-black/80 backdrop-blur-sm">
               <!-- Animated Minimalist Spark Ornament -->
               <div class="flex justify-center mb-4 text-amber-500">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8 animate-pulse">
@@ -178,22 +178,20 @@
 
               <!-- Luxury Subtitle -->
               <span 
-                class="text-[9px] uppercase tracking-[0.25em] font-bold text-amber-500 mb-1 animate-fade-in"
+                class="text-[9px] uppercase tracking-[0.25em] font-bold text-amber-400 mb-1 animate-fade-in"
               >
                 Og'ayni, to'yguningcha yasha
               </span>
 
-              <!-- Congratulations Message (Exactly 20 words for the active language) -->
+              <!-- Congratulations Message -->
               <p 
-                class="text-xl font-light leading-relaxed tracking-wide italic mb-6 animate-fade-in"
-                :class="store.isDarkMode.value ? 'text-zinc-400' : 'text-zinc-600'"
+                class="text-xl font-light leading-relaxed tracking-wide italic mb-6 animate-fade-in text-white"
               >
                Muhimi Jonni Sog'lig'i 
               </p>
                
               <p class="w-[100px] h-[25px] rounded-sm border-2 text-[11px] left-1/2 -translate-x-1/2 flex justify-center
-               items-center  absolute bottom-0 border-white/10 border-b-0"
-                :class="store.isDarkMode.value ? 'text-zinc-400' : 'text-zinc-600'"
+               items-center  absolute bottom-0 border-white/20 border-b-0 text-white bg-black/40 font-medium"
                >13.08.2026</p>
             </div>
           </div>
