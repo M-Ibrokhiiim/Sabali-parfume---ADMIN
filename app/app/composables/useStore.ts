@@ -279,7 +279,10 @@ export const useStore = () => {
   const products = useState<Product[]>('sabali-products', () => [])
   const loading = useState<boolean>('sabali-loading', () => false)
   const error = useState<string | null>('sabali-error', () => null)
-  const apiBaseUrl = useState<string>('sabali-api-url', () => 'http://localhost:4000')
+  
+  // Render Cloud API Base URL
+  const apiBaseUrl = useState<string>('sabali-api-url', () => 'https://sabali-parfum-backend.onrender.com')
+
   const isDarkMode = useState<boolean>('sabali-dark-mode', () => true)
   
   // Localization state
@@ -331,15 +334,18 @@ export const useStore = () => {
       locale.value = savedLocale
     }
 
-    // Load API URL
+    // Load API URL with self-healing local network IP resolution
     const savedUrl = localStorage.getItem('sabali_api_url')
     if (savedUrl) {
-      if (savedUrl === 'http://localhost:3000' || savedUrl === 'http://localhost:3000/') {
-        apiBaseUrl.value = 'http://localhost:4000'
-        localStorage.setItem('sabali_api_url', 'http://localhost:4000')
+      if (savedUrl.includes('localhost') || savedUrl.includes('127.0.0.1') || savedUrl.includes('192.168.')) {
+        apiBaseUrl.value = 'https://sabali-parfum-backend.onrender.com'
+        localStorage.setItem('sabali_api_url', 'https://sabali-parfum-backend.onrender.com')
       } else {
         apiBaseUrl.value = savedUrl
       }
+    } else {
+      apiBaseUrl.value = 'https://sabali-parfum-backend.onrender.com'
+      localStorage.setItem('sabali_api_url', 'https://sabali-parfum-backend.onrender.com')
     }
 
     // Load products
@@ -373,47 +379,77 @@ export const useStore = () => {
     loading.value = true
     error.value = null
 
+    const mapProduct = (p: any, category: 'Men' | 'Women') => {
+      const rawImages = Array.isArray(p.image) ? p.image : (p.image ? [p.image] : [])
+      const mappedImages = rawImages.map((img: string) => {
+        if (img && !img.startsWith('http')) {
+          const prefix = img.startsWith('/') ? '' : '/'
+          return `${apiBaseUrl.value}${prefix}${img}`
+        }
+        return img || ''
+      }).filter(Boolean)
+
+      return {
+        id: String(p.id),
+        name: p.name || '',
+        brand: p.brand || '',
+        price: Number(p.price || 0),
+        volume: p.capacity || p.volume || '100ml',
+        category,
+        stock: Number(p.stock ?? 10),
+        description: p.description || '',
+        images: mappedImages,
+        sales: Number(p.sales || 0),
+        rating: Number(p.rating || 5.0),
+        createdAt: p.createdAt || new Date().toISOString(),
+        starred: p.starred === true || p.starred === 'true'
+      }
+    }
+
     try {
-      // Fetch men and women products concurrently from public endpoints
-      const [menResponse, womenResponse] = await Promise.all([
-        $fetch<any[]>(`${apiBaseUrl.value}/parfumes/men`).catch(e => {
+      let combined: Product[] = []
+
+      if (activeTab.value === 'all') {
+        const [menResponse, womenResponse] = await Promise.all([
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/men`).catch(e => {
+            console.error('Error fetching men perfumes:', e)
+            return []
+          }),
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/women`).catch(e => {
+            console.error('Error fetching women perfumes:', e)
+            return []
+          })
+        ])
+        const mappedMen = menResponse.map(p => mapProduct(p, 'Men'))
+        const mappedWomen = womenResponse.map(p => mapProduct(p, 'Women'))
+        combined = [...mappedMen, ...mappedWomen]
+      } else if (activeTab.value === 'Men') {
+        const menResponse = await $fetch<any[]>(`${apiBaseUrl.value}/parfumes/men`).catch(e => {
           console.error('Error fetching men perfumes:', e)
           return []
-        }),
-        $fetch<any[]>(`${apiBaseUrl.value}/parfumes/women`).catch(e => {
+        })
+        combined = menResponse.map(p => mapProduct(p, 'Men'))
+      } else if (activeTab.value === 'Women') {
+        const womenResponse = await $fetch<any[]>(`${apiBaseUrl.value}/parfumes/women`).catch(e => {
           console.error('Error fetching women perfumes:', e)
           return []
         })
-      ])
-
-      const mapProduct = (p: any, category: 'Men' | 'Women') => {
-        let imgUrl = p.image || ''
-        if (imgUrl && !imgUrl.startsWith('http')) {
-          if (!imgUrl.startsWith('/')) {
-            imgUrl = '/' + imgUrl
-          }
-          imgUrl = `${apiBaseUrl.value}${imgUrl}`
-        }
-        return {
-          id: String(p.id),
-          name: p.name || '',
-          brand: p.brand || '',
-          price: Number(p.price || 0),
-          volume: p.volume || '100ml',
-          category,
-          stock: Number(p.stock ?? 10),
-          description: p.description || '',
-          images: imgUrl ? [imgUrl] : [],
-          sales: Number(p.sales || 0),
-          rating: Number(p.rating || 5.0),
-          createdAt: p.createdAt || new Date().toISOString(),
-          starred: p.starred === true || p.starred === 'true'
-        }
+        combined = womenResponse.map(p => mapProduct(p, 'Women'))
+      } else if (activeTab.value === 'Trend') {
+        const [menTrendResponse, womenTrendResponse] = await Promise.all([
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/trend/men`).catch(e => {
+            console.error('Error fetching men trend perfumes:', e)
+            return []
+          }),
+          $fetch<any[]>(`${apiBaseUrl.value}/parfumes/trend/women`).catch(e => {
+            console.error('Error fetching women trend perfumes:', e)
+            return []
+          })
+        ])
+        const mappedMen = menTrendResponse.map(p => mapProduct(p, 'Men'))
+        const mappedWomen = womenTrendResponse.map(p => mapProduct(p, 'Women'))
+        combined = [...mappedMen, ...mappedWomen]
       }
-
-      const mappedMen = menResponse.map(p => mapProduct(p, 'Men'))
-      const mappedWomen = womenResponse.map(p => mapProduct(p, 'Women'))
-      const combined = [...mappedMen, ...mappedWomen]
 
       products.value = combined
       if (isBrowser) {
