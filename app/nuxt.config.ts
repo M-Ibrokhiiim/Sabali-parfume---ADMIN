@@ -15,7 +15,5 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss()
     ]
-  },
-
-  modules: ['cloudflare']
+  }
 })

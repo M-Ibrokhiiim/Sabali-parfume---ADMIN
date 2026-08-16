@@ -310,7 +310,11 @@ const filteredProducts = computed(() => {
 
 const toggleStar = async (product) => {
   const newStarred = !product.starred
-  await updateProduct(product.id, { starred: newStarred })
+  // Optimistically toggle starred locally so the star lights up instantly
+  product.starred = newStarred
+  
+  // Call updateProduct silently so the database sync background request doesn't flash the loading popup
+  await updateProduct(product.id, { starred: newStarred }, true)
 }
 
 // Editing routing
